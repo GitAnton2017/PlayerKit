@@ -2,7 +2,7 @@
 //  PlayerKitFrameworkTests.swift
 //  PlayerKitFrameworkTests
 //
-//  Created by Anton2016 on 15.12.2022.
+//  Created by Anton V. Kalinin on 15.12.2022.
 //
 
 import XCTest
