@@ -149,9 +149,7 @@ internal enum NTXPlayerStates {
   
   internal func handle(priorState: (any NTXPlayerState)? ) throws  {
    debugPrint ("<<< ***** PLAYER INITIAL STATE ***** >>>")
-   
-   player.playerStateDelegate?
-    .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .started)
+ 
    
     //Can be handled only initially when there is no prior state at all!
    
@@ -186,6 +184,21 @@ internal enum NTXPlayerStates {
    player.playerMutedStateView.isHidden = true
    player.playerContainerView.bringSubviewToFront(player.playerMutedStateView)
    
+    //ZP = 4.1 in Owner view
+   if let touchView = player.playerTouchView{
+    touchView.isHidden = true
+    player.playerContainerView.bringSubviewToFront(touchView)
+    touchView.handler = {
+     touchView.isHidden = true
+     player.animateControlsPanels(hidden: false) {
+      player.animateControlsPanels(hidden: true) {
+       touchView.isHidden = false
+      }
+     }
+    }
+   }
+   
+   
     //ZP = 5
    player.controlGroups.forEach{player.playerContainerView.bringSubviewToFront($0)}
    
@@ -198,7 +211,7 @@ internal enum NTXPlayerStates {
    
     ///GO TO CONNECTING STATE...
    
-   
+    //ZP = 7
    
    player.playerStateDelegate?
     .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .connecting)
@@ -390,6 +403,8 @@ internal enum NTXPlayerStates {
    player.playerStateDelegate?
     .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .connecting)
    
+   player.currentState = .connecting
+   
    switch priorState {
      
     case is Stopped<P>            : fallthrough
@@ -438,6 +453,8 @@ internal enum NTXPlayerStates {
    
    player.playerStateDelegate?
     .playerDidChangeState(deviceID: player.inputVSSSearchResult.id,to: .connected)
+   
+   player.currentState = .connected
    
    switch priorState {
     case is Connecting<P>  : try startLiveStreamingFromConnectedVSS()
@@ -590,8 +607,9 @@ internal enum NTXPlayerStates {
    debugPrint (#function)
    
    player.playerStateDelegate?
-    .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .loading)
+    .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .started)
    
+   player.currentState = .started
    
    guard tryRestartCount > 0 else {
     player.showAlert(alert: .error(message: "Превышен лимит попыток живого вещания ресурса СВН!"))
@@ -635,9 +653,8 @@ internal enum NTXPlayerStates {
                                            .pause              : true ,
                                            .toggleMuting       : true ,
                                            .playArchiveBack    : isArchiveAvailable ,
-                                           .playArchiveForward : false ]) {
-                                            player.playerMutedStateView.isHidden = false
-                                           }
+                                           .playArchiveForward : false ])
+       { [ weak mutedView = player.playerMutedStateView ] in mutedView?.isHidden = false }
        
        player.showAlert(alert: .warning(message: "Трансляция производится с выключенным звуком! "))
        
@@ -653,6 +670,11 @@ internal enum NTXPlayerStates {
        player.playerStateDelegate?
         .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .playing)
        
+       player.currentState = .playing
+       
+       player.animateControlsPanels(hidden: true) { [ weak touchView = player.playerTouchView ] in
+        touchView?.isHidden = false
+       }
       }
       
      case .failure(let error):
@@ -701,6 +723,9 @@ internal enum NTXPlayerStates {
     
     player.playerStateDelegate?
      .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .playing)
+    
+    player.currentState = .playing
+    
    }
    
   }
@@ -751,6 +776,8 @@ internal enum NTXPlayerStates {
    animateControlsEnabledState(mask: [.play: true, .pause: false]) {
     player.playerStateDelegate?
      .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .paused)
+    
+    player.currentState = .paused
     
    }
    
@@ -819,6 +846,9 @@ internal enum NTXPlayerStates {
      
      player.playerStateDelegate?
       .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .stopped)
+     
+     player.currentState = .stopped
+     
     }
     do {
       ///TRY TO SET KEEP ALIVE STATE NOW **STOPPED**
@@ -854,6 +884,8 @@ internal enum NTXPlayerStates {
      
      player.playerStateDelegate?
       .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .stopped)
+     
+     player.currentState = .stopped
     }
     
     do {
@@ -888,6 +920,9 @@ internal enum NTXPlayerStates {
     
     player.playerStateDelegate?
      .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .stopped)
+    
+    player.currentState = .playing
+    
    }
    
    
@@ -993,18 +1028,16 @@ internal enum NTXPlayerStates {
                                           .playArchiveForward : true,
                                           .play               : false,
                                           .pause              : true]) {
-                                           player.playerStateDelegate?
-                                            .playerWillPlayArchiveVideo(deviceID: player.inputVSSSearchResult.id,
-                                                                        depthSeconds: depthSeconds)
-                                           
-                                           player.playerStateDelegate?
-                                            .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .playing)
-                                           
-                                           player.playerMutedStateView.isHidden = false
-                                           player.showAlert(alert: .warning(message: "Архив воспроизводится с выключенным звуком!"))
-                                           
-                                           
-                                          }
+        player.playerStateDelegate?
+         .playerWillPlayArchiveVideo(deviceID: player.inputVSSSearchResult.id,
+                                     depthSeconds: depthSeconds)
+        
+        player.playerStateDelegate?
+         .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .playing)
+        
+        player.currentState = .playing
+        player.playerMutedStateView.isHidden = false
+        player.showAlert(alert: .warning(message: "Архив воспроизводится с выключенным звуком!")) }
        
        
        
@@ -1169,6 +1202,8 @@ internal enum NTXPlayerStates {
    player.playerStateDelegate?
     .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
    
+   player.currentState = .error
+   
    switch (priorState, error) {
      
     case ( is Connecting<P>, .VSSConnectionRetryCountEcxeeded):
@@ -1308,11 +1343,11 @@ internal enum NTXPlayerStates {
    super.init()
   }
   
-  
-  
-  
+
   
  }
+ 
+ //MARK: <<< ***** PLAYER INVALIDATED STATE ***** >>>
  
  internal struct Invalidated<P: NTXMobileNativePlayerProtocol>: NTXPlayerState
  where P.Delegate.Device == P.Manager.InputDevice {
@@ -1327,31 +1362,34 @@ internal enum NTXPlayerStates {
     throw StateError.unexpectedState(prior: priorState, current: self)
    }
    
-   invalidateNotificationsObservations()
-   player.shutdownHandler(player.inputVSSSearchResult)
-  }
-  
-  
-  
-  
-  
-  private func invalidateNotificationsObservations() {
-   
-   debugPrint(#function)
-   
-   if #available(iOS 13.0, *) {
-    player.notificationsTokens.compactMap{ $0 as? AnyCancellable }.forEach{ $0.cancel() }
-    player.notificationsTokens.removeAll()
-    (player.playArchiveRecordEndToken as? AnyCancellable)?.cancel()
-    
-   } else {
-    player.notificationsTokens.forEach { NotificationCenter.default.removeObserver($0) }
-    
-    if let token = player.playArchiveRecordEndToken {
-     NotificationCenter.default.removeObserver(token)
-    }
+   DispatchQueue.main.async{
+    //invalidateNotificationsObservations()
+    player.playerContainerView.removeFromSuperview()
+    player.shutdownHandler(player.inputVSSSearchResult)
    }
   }
+  
+  
+  
+  
+  
+//  private func invalidateNotificationsObservations() {
+//
+//   debugPrint(#function)
+//
+//   if #available(iOS 13.0, *) {
+//    player.notificationsTokens.compactMap{ $0 as? AnyCancellable }.forEach{ $0.cancel() }
+//    player.notificationsTokens.removeAll()
+//    (player.playArchiveRecordEndToken as? AnyCancellable)?.cancel()
+//
+//   } else {
+//    player.notificationsTokens.forEach { NotificationCenter.default.removeObserver($0) }
+//
+//    if let token = player.playArchiveRecordEndToken {
+//     NotificationCenter.default.removeObserver(token)
+//    }
+//   }
+//  }
   
   
   

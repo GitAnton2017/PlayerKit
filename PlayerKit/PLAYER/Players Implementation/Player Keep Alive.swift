@@ -13,28 +13,6 @@ internal enum NTXKeepAliveError: Error {
  case noKeepAliveService
 }
 
-
-//internal enum Mode: String, Codable {
-// case liveVideo = "live-video"
-// case liveSnapshot = "live-snapshot"
-// case archiveVideo = "archive-video"
-// case archiveSnapshot = "archive-snapshot"
-// case unchanged
-//}
-//
-//internal enum State: String, Codable {
-// case playing = "playing"
-// case paused = "paused"
-// case loading = "loading"
-// case error = "error"
-// case suspended = "suspended"
-//}
-//
-//internal struct Archive: Codable {
-// var position: Int
-// var scale: Int = 1
-//}
-
 internal protocol NTXPlayerKeepAliveModeRepresentable
  where Self: RawRepresentable & Codable, RawValue == String {
  

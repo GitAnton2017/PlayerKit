@@ -36,21 +36,32 @@ where Delegate.Device == Manager.InputDevice {
  internal typealias Kit = NTXDefaultPlayerKit
  
  /// Customize here player  container in this builder. The defaul kit uses default UIView.
- internal static var defaultContainer: GenericViewBuilder     { { UIView(frame: .zero) }        }
+ internal static var defaultContainer: GenericViewBuilder     {
+  {
+   let view = UIView(frame: .zero)
+   view.backgroundColor = #colorLiteral(red: 0, green: 0.1639138963, blue: 0.7338046119, alpha: 1)
+   return view
+   
+  }
+  
+ }
  
  /// Customize here player muted state view in this builder. The defaul kit uses default UIView.
  internal static var defaultMuted:     GenericViewBuilder     {
   { () -> UIImageView in
    let iv = UIImageView()
    if #available(iOS 15.0, *) {
-    iv.image = .init(systemName: "speaker.slash")?
+    iv.image = .init(systemName: "muted")?
      .applyingSymbolConfiguration(.init(pointSize: 20))?
      .applyingSymbolConfiguration(.init(hierarchicalColor: .systemRed.withAlphaComponent(0.85)))?
      .withTintColor(.systemRed.withAlphaComponent(0.85))
     
    } else {
-    iv.image = .init(named: "speaker.slash")
-    iv.tintColor = .systemRed.withAlphaComponent(0.85)
+    iv.image = .init(named: "muted",
+                     in: .init(for: Self.self),
+                     compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+    
+    iv.tintColor = .systemOrange
    }
    return iv
   }
@@ -98,7 +109,7 @@ where Delegate.Device == Manager.InputDevice {
    } else {
     ai.style = .whiteLarge
    }
-   ai.color = .white
+   ai.color = .systemOrange
    return ai
   }
  
@@ -114,7 +125,7 @@ where Delegate.Device == Manager.InputDevice {
    label.numberOfLines = 1
    label.font = .systemFont(ofSize: 50)
    label.textAlignment = .center
-   label.textColor = .systemRed.withAlphaComponent(0.75)
+   label.textColor = .systemOrange.withAlphaComponent(0.75)
    return label
    
   }
@@ -171,7 +182,9 @@ where Delegate.Device == Manager.InputDevice {
  
  internal let shutdownHandler: (Delegate.Device) -> ()
  
-
+ deinit {
+  debugPrint(String(describing: Self.self), " IS DESTROYED SUCCESSFULLY!")
+ }
  
 }
 

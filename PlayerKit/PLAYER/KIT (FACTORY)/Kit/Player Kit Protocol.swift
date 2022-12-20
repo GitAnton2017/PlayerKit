@@ -83,8 +83,6 @@ internal extension NTXPlayerAbstractKit {
    .confined(to: playerOwnerView,
              applying: playerConfiguration.insetsFromPlayerOwner)
   
-  playerContainerView.backgroundColor = .clear
-  
    //Build Player generic playing context view & make it confined to the player container view.
   let playerContextView = makePlayerContext()
    .confined(to: playerContainerView,
@@ -138,6 +136,7 @@ internal extension NTXPlayerAbstractKit {
   
   let playerTimeLine = makeTimeLine().confined(centeredIn: playerContainerView)
   
+  PlayerTouchView(frame: .zero).confined(to: playerContainerView)
   
   let player = Player(playerOwnerView:         playerOwnerView,
                       playerContainerView:     playerContainerView,
@@ -152,7 +151,7 @@ internal extension NTXPlayerAbstractKit {
                       timeLine:                playerTimeLine,
                       shutdownHandler:         shutdownHandler)
   
-  let _ = makePlayerControls(player)
+  _ = makePlayerControls(player)
    .map{$0.confined(groupType: $0.group,
                     of: playerContainerView,
                     realtiveSize: playerConfiguration.controlsRelativeSizeToContainer)}

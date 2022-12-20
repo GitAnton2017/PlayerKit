@@ -43,7 +43,8 @@ internal protocol NTXMobileNativePlayerProtocol where Self: NSObject {
       timeLine:                NTXPlayerTimeLine,
       shutdownHandler:         @escaping (Delegate.Device) -> () )
  
- 
+ var currentState:                        VideoPlayerState   { get set } /// External state for public interface
+                                                                         ///
  var playerState:                         any NTXPlayerState { get set } ///PLAYER STATE OBJECTS!!
  
  var appBackgroundTimeLimitForPlayer:     TimeInterval       { get set }
@@ -115,7 +116,7 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
  func start() throws  {
   
   playerStateDelegate?
-   .playerWillChangeState(deviceID: inputVSSSearchResult.id, to: .started)
+   .playerWillChangeState(deviceID: inputVSSSearchResult.id, to: .loading)
   
   try playerState.handle(priorState: nil)
  }
@@ -136,7 +137,7 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
  
  var isMuted: Bool { playerContext.isMuted }
  
- func toggleMuting() {
+ @discardableResult func toggleMuting() -> Bool {
   
   debugPrint (#function)
   
@@ -145,10 +146,12 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
   
   playerStateDelegate?
    .playerMutedStateDidChange(deviceID: inputVSSSearchResult.id, muted: isMuted)
+  
+  return true
  }
  
  
- func play()  {
+ @discardableResult func play() -> Bool  {
   
   debugPrint (#function)
   
@@ -164,6 +167,7 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
                                             streamURL: state.streamURL,
                                             tryRestartCount: 0,
                                             archiveDepth: state.archiveDepth)
+    return true
     
    case let state as NTXPlayerStates.Streaming<Self>:
     playerState = NTXPlayerStates.Streaming(player: self,
@@ -171,18 +175,23 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
                                             tryRestartCount: 0,
                                             archiveDepth: state.archiveDepth)
     
+    return true
+    
    case let state as NTXPlayerStates.PlayingArchive<Self>:
     playerState = NTXPlayerStates.Streaming(player: self,
                                             streamURL: state.liveStreamURL,
                                             tryRestartCount: 0,
                                             archiveDepth: state.depthSeconds)
-   default: break
+    return true
+    
+   default: return false
     
   }
   
+  
  }
  
- func pause() {
+ @discardableResult func pause() -> Bool {
   debugPrint (#function)
   
   playerStateDelegate?
@@ -197,16 +206,23 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
                                          streamURL: state.streamURL,
                                          archiveDepth: state.archiveDepth)
     
+    return true
+    
    case let state as NTXPlayerStates.PlayingArchive<Self>:
     playerState = NTXPlayerStates.Paused(player: self,
                                          streamURL: state.liveStreamURL,
                                          archiveDepth: state.depthSeconds)
     
+    return true
+    
    case let state as NTXPlayerStates.Paused<Self>:
     playerState = NTXPlayerStates.Paused(player: self,
                                          streamURL: state.streamURL,
                                          archiveDepth: state.archiveDepth)
-   default: break
+    
+    return true
+    
+   default: return false
     
   }
   
@@ -231,6 +247,77 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
   
  }
  
+ var archiveDepthInterval: (start: Int, end: Int){
+  let start = (currentVSSArchiveControls?.start ?? 0) / 1000
+  let end   = (currentVSSArchiveControls?.end   ?? 0) / 1000
+  
+  return (start: start, end: end)
+ }
+ 
+ 
+ var archiveDateInterval: DateInterval{
+  
+  let startDate = Date() - TimeInterval(archiveDepthInterval.start)
+  let endDate   = Date() - TimeInterval(archiveDepthInterval.end)
+  
+  return .init(start: startDate, end: endDate)
+ }
+ 
+ @discardableResult func playArchive(at timePoint: UInt) -> Bool {
+  
+  guard let archiveContext = currentVSSArchiveControls else { return false }
+ 
+  let startSec = (archiveContext.start ?? 0) / 1000
+  let endSec   = (archiveContext.end   ?? 0) / 1000
+  
+  guard timePoint >= startSec && timePoint <= endSec else { return false }
+  
+  playArchive(with: Int(timePoint) - endSec)
+  
+  return true
+  
+ }
+ 
+ @discardableResult func playArchive(with depthSeconds: Int) -> Bool {
+  guard depthSeconds < 0 else { play(); return false }
+  
+  debugPrint (#function)
+  
+  playerStateDelegate?
+   .playerControlDidPressed(deviceID: inputVSSSearchResult.id, for: .playArchiveBack)
+  
+  playerStateDelegate?
+   .playerWillChangeState(deviceID: inputVSSSearchResult.id, to: .playingArchiveBack)
+  
+  switch playerState {
+    
+   case let state as NTXPlayerStates.PlayingArchive<Self>:
+    
+    playerState = NTXPlayerStates.PlayingArchive(player: self,
+                                                 depthSeconds: depthSeconds,
+                                                 liveStreamURL: state.liveStreamURL)
+    
+    return true
+    
+   case let state as NTXPlayerStates.Paused<Self>:
+    
+    playerState = NTXPlayerStates.PlayingArchive(player: self,
+                                                 depthSeconds: depthSeconds,
+                                                 liveStreamURL: state.streamURL)
+    
+    return true
+    
+   case let state as NTXPlayerStates.Streaming<Self>:
+    
+    playerState = NTXPlayerStates.PlayingArchive(player: self,
+                                                 depthSeconds: depthSeconds,
+                                                 liveStreamURL: state.streamURL)
+    return true
+    
+   default: return false
+  }
+ }
+  
  func playArchiveBack() {
   
   debugPrint (#function)
@@ -300,7 +387,7 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
   }
  }
  
- func refresh() {
+ @discardableResult func refresh() -> Bool {
   debugPrint (#function)
   
   playerStateDelegate?
@@ -310,10 +397,12 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
    .playerWillChangeState(deviceID: inputVSSSearchResult.id, to: .connecting)
   
   playerState = NTXPlayerStates.Connecting(player: self, tryCount: NTXPlayerStates.maxVSSContextRequests)
+  
+  return true
  }
  
  
- func stop() {
+ @discardableResult func stop() -> Bool {
   debugPrint (#function)
   
   playerStateDelegate?
@@ -323,6 +412,8 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
    .playerWillChangeState(deviceID: inputVSSSearchResult.id, to: .stopped)
   
   playerState = NTXPlayerStates.Stopped(player: self)
+  
+  return true 
  }
  
  
@@ -353,5 +444,55 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
    //TODO: ---
  }
  
+ 
+ func controlGroup(for position: NTXPlayerControlGroup) -> UIStackView?{
+  controlGroups.first {
+   $0.arrangedSubviews
+    .compactMap{$0 as? (any NTXPlayerControl)}
+    .first{$0.group == position} != nil
+  }
+ }
+ 
+ var playerTouchView: PlayerTouchView? {
+  playerContainerView.subviews.compactMap{$0 as? PlayerTouchView}.first
+ }
+ 
+ func animateControlsPanels(hidden: Bool,
+                            position: NTXPlayerControlGroup = .bottomCentered,
+                            duration: TimeInterval = 0.75, delay:
+                            TimeInterval = 5.0, completion: (() -> ())? = nil) {
+  
+  guard let group = controlGroup(for: position) else { return }
+  
+  let bounds = group.bounds
+  
+  let pa = UIViewPropertyAnimator(duration: duration, curve: .easeInOut){ [ weak group ] in
+   guard let group = group else { return }
+   
+   switch position {
+     
+    case .topLeading, .topCentered, .topTrailing:
+     group.transform = hidden ? .init(translationX: 0, y: -2 * bounds.height) : .identity
+     
+    case .bottomTrailing, .bottomCentered, .bottomLeading:
+     group.transform = hidden ? .init(translationX: 0, y: 2 * bounds.height) : .identity
+     
+    case .trailingCentered:
+     group.transform = hidden ? .init(translationX: 2 * bounds.width, y: 0) : .identity
+     
+    case .leadingCentered:
+     group.transform = hidden ? .init(translationX: -2 * bounds.width, y: 0) : .identity
+   }
+  }
+  
+  pa.addCompletion{ _ in completion?() }
+  
+  DispatchQueue.main.asyncAfter(deadline: .now() + (hidden ? delay : 0)) {
+   pa.startAnimation()
+  }
+  
+  
+  
+ }
  
 }

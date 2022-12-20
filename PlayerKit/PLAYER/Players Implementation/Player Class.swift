@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import AVFoundation
+import Combine
 
 
 ///# КОНКРЕТНАЯ РЕАЛИЗАЦИЯ ОБОБЩЕННОГО ПЛЕЕРА (NTXMobileNativePlayer).
@@ -48,6 +49,7 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
  internal let  shutdownHandler: (Delegate.Device) -> ()
  
  internal var requests = [AbstractRequest]()
+ 
  
  internal var currentVSS: Manager.Device? {
   didSet {
@@ -95,6 +97,13 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
  internal var playerState: any NTXPlayerState {
   get { stateIQ.sync  { __state__ } }
   set { stateIQ.sync  { __state__ = newValue  }}
+ }
+ 
+ private var __currentState__: VideoPlayerState = .initial
+ 
+ internal var currentState: VideoPlayerState {
+  get { stateIQ.sync  { __currentState__ } }
+  set { stateIQ.sync  { __currentState__ = newValue  }}
  }
  
  private lazy var __state__: any NTXPlayerState = NTXPlayerStates.Initial(player: self) {
@@ -208,7 +217,7 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
      $0.firstAttribute == .top && $0.secondAttribute == .top
    }
   
-   topConst?.constant = 150
+   topConst?.constant = 250
    playerContainerView.layoutIfNeeded()
    return topConst
  }()
@@ -218,34 +227,50 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
   debugPrint (#function)
   
 
-  alertDispatcher.async { [ weak self ] in
-   guard let self = self else { return }
-   self.alertSemaphore.wait()
-   DispatchQueue.main.async { [ weak self ] in
-    guard let self = self else { return }
-    guard let topConst = self.topConst else { return }
-    self.playerAlertView.alert = alert
-    topConst.constant = 0.0
+  alertDispatcher.async { [ weak alertView = playerAlertView,
+                            weak containerView = playerContainerView,
+                            sema = alertSemaphore,
+                            weak topConst = topConst,
+                            duration = transitionDurationOfContexts,
+                            delay = removeDelay ] in
+   sema.wait()
+   DispatchQueue.main.async { [ weak alertView, weak topConst ] in
 
-    UIView.animate(withDuration: self.duration,
-                   delay: 0.0,
-                   options: [.curveEaseInOut, .allowUserInteraction]) { [ weak self ] in
-     self?.playerContainerView.layoutIfNeeded()
-    } completion: { [ weak self ] _ in
-     guard let self = self else { return }
-     topConst.constant = 150
-     UIView.animate(withDuration: self.transitionDurationOfContexts,
-                    delay: self.removeDelay,
-                    options: [.curveEaseInOut, .allowUserInteraction]) { [ weak self ] in
-      self?.playerContainerView.layoutIfNeeded()
+    alertView?.alert = alert
+    topConst?.constant = 0.0
+    
+    UIView.animate(withDuration: duration, delay: 0.0, options: [.curveEaseInOut]) { [ weak containerView ] in
+     containerView?.layoutIfNeeded()
+    } completion: { [ weak topConst ] _ in
+   
+     topConst?.constant = 250
+     
+     UIView.animate(withDuration: duration, delay: delay, options: [.curveEaseInOut]) { [ weak containerView ] in
+      containerView?.layoutIfNeeded()
       
-     } completion: { [ weak self ] _ in
-      guard let self = self else { return }
-      self.alertSemaphore.signal()
-     }
+     } completion: {  _ in sema.signal() }
     }
    }
   }
  }
+ 
+ deinit {
+  debugPrint( " <<<<<<< **** PLAYER CLASS IS DESTROYED **** >>>>>>")
+  
+  if #available(iOS 13.0, *) {
+   notificationsTokens.compactMap{ $0 as? AnyCancellable }.forEach{ $0.cancel() }
+   notificationsTokens.removeAll()
+   (playArchiveRecordEndToken as? AnyCancellable)?.cancel()
+   
+  } else {
+   notificationsTokens.forEach { NotificationCenter.default.removeObserver($0) }
+   
+   if let token = playArchiveRecordEndToken {
+    NotificationCenter.default.removeObserver(token)
+   }
+  }
+ }
+  
+
 }
 

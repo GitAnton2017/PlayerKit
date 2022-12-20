@@ -10,24 +10,24 @@ import UIKit
 
 internal final class EchdArchiveControl: NSObject {
 
-    var data:[String:AnyObject]?
-    var success:Bool = false
+    var data: [ String : AnyObject ]?
+    var success = false
  
-    internal var depth:Int?
-    internal var start:Int?
-    internal var end:Int?
+    internal var depth : Int?
+    internal var start : Int?
+    internal var end   : Int?
  
-    var state:String?
+    var state : String?
     
     internal init(data:[String : AnyObject]){  // array
         self.data = data
         
         if (data["success"] as? Bool) != nil {
-            if let recording:[String : AnyObject] = data["recording"] as? [String : AnyObject] {
-                self.depth = recording["depth"] as? Int
-                self.start = recording["start"] as? Int
-                self.end = recording["end"] as? Int
-                self.state = recording["state"] as? String
+            if let recording = data["recording"] as? [String : AnyObject] {
+                self.depth = recording["depth"]  as? Int
+                self.start = recording["start"]  as? Int
+                self.end   = recording["end"]    as? Int
+                self.state = recording["state"]  as? String
             }
         }
     }

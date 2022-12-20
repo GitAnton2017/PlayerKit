@@ -11,9 +11,12 @@ import Foundation
 /// The protocol that defined player interface object that is used as an input search VSS result from client
 /// It might be a any id representable type convertable to Int.
 
+
+public typealias DeviceID = NTXVSSSearchResultContext
+
 public protocol NTXVSSSearchResultContext {
  
- associatedtype VSSIDType
+ associatedtype VSSIDType: Hashable
  var id: VSSIDType  { get }
 }
 

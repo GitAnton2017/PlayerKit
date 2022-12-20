@@ -14,6 +14,12 @@
 ///– case error (произошла ошибка);
 ///– case started (плеер запущен, но проигрывание ещё не началось);
 ///– case loading (идёт загрузка информации об СВН).
+///
+
+
+
+
+public typealias VideoPlayerState = NTXVideoPlayerStates
 
 public enum NTXVideoPlayerStates: String, Codable, Hashable, CaseIterable {
  case stopped   // (плеер остановлен);
@@ -25,5 +31,6 @@ public enum NTXVideoPlayerStates: String, Codable, Hashable, CaseIterable {
  case started   // (плеер запущен, но проигрывание ещё не началось);
  case loading
  case connecting
- case connected
+ case connected 
+ case initial  // loading views
 }

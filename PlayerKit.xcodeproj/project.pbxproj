@@ -127,7 +127,9 @@
 		A7854109294B3EB700417336 /* SudirAuthenticateRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7854108294B3EB700417336 /* SudirAuthenticateRequest.swift */; };
 		A785416C294B3FD500417336 /* AppVersionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A785416B294B3FD500417336 /* AppVersionHelper.swift */; };
 		A785416E294B3FF100417336 /* AppDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A785416D294B3FF100417336 /* AppDefaults.swift */; };
-		A79FD8B3294BCAE800F9AC2C /* Video Module Facade.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79FD8B2294BCAE800F9AC2C /* Video Module Facade.swift */; };
+		A79FD8B3294BCAE800F9AC2C /* Module Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79FD8B2294BCAE800F9AC2C /* Module Player.swift */; };
+		A7D2D550295087570076056E /* Video Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D2D54F295087570076056E /* Video Module.swift */; };
+		A7E8DE232951E4F600F3BDDA /* Player Touch View.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E8DE222951E4F600F3BDDA /* Player Touch View.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -259,7 +261,9 @@
 		A7854108294B3EB700417336 /* SudirAuthenticateRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudirAuthenticateRequest.swift; sourceTree = "<group>"; };
 		A785416B294B3FD500417336 /* AppVersionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppVersionHelper.swift; sourceTree = "<group>"; };
 		A785416D294B3FF100417336 /* AppDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDefaults.swift; sourceTree = "<group>"; };
-		A79FD8B2294BCAE800F9AC2C /* Video Module Facade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Video Module Facade.swift"; sourceTree = "<group>"; };
+		A79FD8B2294BCAE800F9AC2C /* Module Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Module Player.swift"; sourceTree = "<group>"; };
+		A7D2D54F295087570076056E /* Video Module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Video Module.swift"; sourceTree = "<group>"; };
+		A7E8DE222951E4F600F3BDDA /* Player Touch View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Touch View.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -372,7 +376,8 @@
 				A771A1B3294B2E320042C578 /* Player Keep Alive.swift */,
 				A771A1B2294B2E320042C578 /* Player Images Cache.swift */,
 				A775081B294CAE240098449B /* Player Protocol.swift */,
-				A79FD8B2294BCAE800F9AC2C /* Video Module Facade.swift */,
+				A79FD8B2294BCAE800F9AC2C /* Module Player.swift */,
+				A7D2D54F295087570076056E /* Video Module.swift */,
 			);
 			path = "Players Implementation";
 			sourceTree = "<group>";
@@ -385,6 +390,7 @@
 				A771A1B5294B2E330042C578 /* Player Alerts Protocol.swift */,
 				A771A1BF294B2E350042C578 /* Player Controls.swift */,
 				A771A1B1294B2E320042C578 /* Player Time Line.swift */,
+				A7E8DE222951E4F600F3BDDA /* Player Touch View.swift */,
 			);
 			path = "Player UI Components";
 			sourceTree = "<group>";
@@ -670,10 +676,11 @@
 				A730D519294B49DB001932B6 /* EchdGetMapSettingsRequest.swift in Sources */,
 				A730D509294B4668001932B6 /* EchdFiltersServiceProtocol.swift in Sources */,
 				A730D57A294B612F001932B6 /* SudirRefreshTokensParameters.swift in Sources */,
-				A79FD8B3294BCAE800F9AC2C /* Video Module Facade.swift in Sources */,
+				A79FD8B3294BCAE800F9AC2C /* Module Player.swift in Sources */,
 				A7854101294B3D4E00417336 /* EchdCameraRequest.swift in Sources */,
 				A771A1C4294B2E350042C578 /* Player VSS Search Context.swift in Sources */,
 				A730D541294B5452001932B6 /* EchdMoveRequest.swift in Sources */,
+				A7E8DE232951E4F600F3BDDA /* Player Touch View.swift in Sources */,
 				A7627C64294CA8E5008CB903 /* Player Kit Configuration.swift in Sources */,
 				A771A1C1294B2E350042C578 /* Player Time Line.swift in Sources */,
 				A730D510294B4796001932B6 /* EchdSearchCameraCountRequest.swift in Sources */,
@@ -741,6 +748,7 @@
 				A771A1E8294B32A10042C578 /* EchdKeepAliveService.swift in Sources */,
 				A730D50D294B470A001932B6 /* EchdAuthorizationRequest.swift in Sources */,
 				A771A1C3294B2E350042C578 /* Player Keep Alive.swift in Sources */,
+				A7D2D550295087570076056E /* Video Module.swift in Sources */,
 				A7854107294B3E0800417336 /* EchdMakePhotoRequest.swift in Sources */,
 				A7750828294CBFA30098449B /* Player States Delegate.swift in Sources */,
 				A730D561294B5723001932B6 /* EchdNoticeListRequest.swift in Sources */,

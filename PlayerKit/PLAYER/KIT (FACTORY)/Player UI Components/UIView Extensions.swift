@@ -10,7 +10,7 @@ import UIKit
 
 extension UIView {
  
- func confined(centeredIn container: UIView) -> Self {
+ @discardableResult func confined(centeredIn container: UIView) -> Self {
   
   translatesAutoresizingMaskIntoConstraints = false
   
@@ -23,7 +23,7 @@ extension UIView {
  }
  
  
- func confined(to container: UIView,
+ @discardableResult func confined(to container: UIView,
                applying insets: UIEdgeInsets = .zero ) -> Self {
   
   translatesAutoresizingMaskIntoConstraints = false
@@ -38,7 +38,7 @@ extension UIView {
   return self
  }
  
- func confined(centeredIn container: UIView,
+ @discardableResult func confined(centeredIn container: UIView,
                withAdaptiveRelativeSize fraction: CGFloat,
                changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
   
@@ -79,7 +79,7 @@ extension UIView {
  }
  
 
- func confined(toTopRightOf container: UIView,
+ @discardableResult func confined(toTopRightOf container: UIView,
                with relativeSize: CGFloat,
                shift: CGPoint = .zero,
                changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
@@ -119,7 +119,7 @@ extension UIView {
   return self
  }
  
- func confined(toTopLeftOf container: UIView,
+ @discardableResult func confined(toTopLeftOf container: UIView,
                withAdaptiveRelativeSize fraction: CGFloat,
                shift: CGPoint = .zero,
                changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
@@ -161,7 +161,7 @@ extension UIView {
  }
  
  
- func confined(toTopCenterOf container: UIView,
+ @discardableResult func confined(toTopCenterOf container: UIView,
                withAdaptiveRelativeHeight fraction: CGFloat,
                shift: CGPoint = .zero,
                changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
@@ -203,7 +203,7 @@ extension UIView {
  }
  
  
- func confined(hiddenOnTopCenterOf container: UIView,
+ @discardableResult func confined(hiddenOnTopCenterOf container: UIView,
                withAdaptiveRelativeHeight fraction: CGFloat,
                changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
   

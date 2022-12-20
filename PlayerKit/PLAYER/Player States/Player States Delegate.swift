@@ -7,6 +7,8 @@
 
 import UIKit
 
+
+
 public enum NTXVideoModuleError <Device: NTXVSSSearchResultContext> {
  
  case playerFailedToAuth        (error: Error, deviceID: Device.VSSIDType)
@@ -33,7 +35,8 @@ public protocol NTXVideoModuleDelegate: AnyObject {
  func playerMovedToOwner            (deviceID: Device.VSSIDType, ownerView: UIView) //
  func playerMutedStateDidChange     (deviceID: Device.VSSIDType, muted: Bool)
  
-
+ init ()
+ 
 }
 
 public extension NTXVideoModuleDelegate {
@@ -81,3 +84,6 @@ public extension NTXVideoModuleDelegate {
   debugPrint("PLAYER DELEGATE MESSAGE <\(#function)> FROM VSS ID (\(deviceID) Muted State = \(muted)")
  }
 }
+
+
+final internal class DefaultPlayerDelegate: IVideoModuleDelegate {}
