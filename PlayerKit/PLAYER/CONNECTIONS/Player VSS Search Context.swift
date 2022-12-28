@@ -14,7 +14,7 @@ import Foundation
 
 public typealias DeviceID = NTXVSSSearchResultContext
 
-public protocol NTXVSSSearchResultContext {
+public protocol NTXVSSSearchResultContext: Hashable {
  
  associatedtype VSSIDType: Hashable
  var id: VSSIDType  { get }

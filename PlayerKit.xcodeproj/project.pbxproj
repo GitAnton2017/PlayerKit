@@ -81,6 +81,11 @@
 		A7580D75294F6A32006BFADE /* Controls.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7580D74294F6A32006BFADE /* Controls.xcassets */; };
 		A7627C62294CA85D008CB903 /* Player Kit Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7627C61294CA85D008CB903 /* Player Kit Protocol.swift */; };
 		A7627C64294CA8E5008CB903 /* Player Kit Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7627C63294CA8E5008CB903 /* Player Kit Configuration.swift */; };
+		A76CE6D7295AC30800D4B286 /* VideoAdmixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6D5295AC30800D4B286 /* VideoAdmixture.swift */; };
+		A76CE6D8295AC30800D4B286 /* AdmixtureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6D6295AC30800D4B286 /* AdmixtureView.swift */; };
+		A76CE6DA295B054F00D4B286 /* ECHD Server Settings Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6D9295B054F00D4B286 /* ECHD Server Settings Request.swift */; };
+		A76CE6DC295B3A6D00D4B286 /* ECHD VSS Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6DB295B3A6D00D4B286 /* ECHD VSS Description.swift */; };
+		A76CE6DE295B3D8A00D4B286 /* ECHD VSS List Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6DD295B3D8A00D4B286 /* ECHD VSS List Request.swift */; };
 		A771A15A294B23EA0042C578 /* PlayerKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = A771A159294B23EA0042C578 /* PlayerKit.docc */; };
 		A771A160294B23EB0042C578 /* PlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A771A155294B23EA0042C578 /* PlayerKit.framework */; };
 		A771A165294B23EB0042C578 /* PlayerKitFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A164294B23EB0042C578 /* PlayerKitFrameworkTests.swift */; };
@@ -214,6 +219,11 @@
 		A7580D74294F6A32006BFADE /* Controls.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Controls.xcassets; sourceTree = "<group>"; };
 		A7627C61294CA85D008CB903 /* Player Kit Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Kit Protocol.swift"; sourceTree = "<group>"; };
 		A7627C63294CA8E5008CB903 /* Player Kit Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Kit Configuration.swift"; sourceTree = "<group>"; };
+		A76CE6D5295AC30800D4B286 /* VideoAdmixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoAdmixture.swift; sourceTree = "<group>"; };
+		A76CE6D6295AC30800D4B286 /* AdmixtureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdmixtureView.swift; sourceTree = "<group>"; };
+		A76CE6D9295B054F00D4B286 /* ECHD Server Settings Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD Server Settings Request.swift"; sourceTree = "<group>"; };
+		A76CE6DB295B3A6D00D4B286 /* ECHD VSS Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS Description.swift"; sourceTree = "<group>"; };
+		A76CE6DD295B3D8A00D4B286 /* ECHD VSS List Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS List Request.swift"; sourceTree = "<group>"; };
 		A771A155294B23EA0042C578 /* PlayerKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayerKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A771A158294B23EA0042C578 /* PlayerKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerKit.h; sourceTree = "<group>"; };
 		A771A159294B23EA0042C578 /* PlayerKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = PlayerKit.docc; sourceTree = "<group>"; };
@@ -385,6 +395,8 @@
 		A7627C67294CAA4B008CB903 /* Player UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				A76CE6D6295AC30800D4B286 /* AdmixtureView.swift */,
+				A76CE6D5295AC30800D4B286 /* VideoAdmixture.swift */,
 				A771A1BB294B2E340042C578 /* UIView Extensions.swift */,
 				A771A1AC294B28240042C578 /* Player Activity Protocol.swift */,
 				A771A1B5294B2E330042C578 /* Player Alerts Protocol.swift */,
@@ -513,6 +525,9 @@
 				A7580CDD294E1FF6006BFADE /* ECHD VSS Connection Request.swift */,
 				A7580CDF294E27D4006BFADE /* ECHD VSS Controls Request.swift */,
 				A7580CE1294E2A59006BFADE /* ECHD VSS Photo Request.swift */,
+				A76CE6D9295B054F00D4B286 /* ECHD Server Settings Request.swift */,
+				A76CE6DB295B3A6D00D4B286 /* ECHD VSS Description.swift */,
+				A76CE6DD295B3D8A00D4B286 /* ECHD VSS List Request.swift */,
 			);
 			path = CONNECTIONS;
 			sourceTree = "<group>";
@@ -665,12 +680,14 @@
 			files = (
 				A730D533294B50B4001932B6 /* FiltersParser.swift in Sources */,
 				A771A1D2294B2F9F0042C578 /* AbstractRequest.swift in Sources */,
+				A76CE6D8295AC30800D4B286 /* AdmixtureView.swift in Sources */,
 				A771A1CC294B2E350042C578 /* Player Internal States.swift in Sources */,
 				A730D558294B563F001932B6 /* LoginViewControllerAuthMode.swift in Sources */,
 				A730D570294B5CB4001932B6 /* String+Extensions.swift in Sources */,
 				A730D51D294B4A4D001932B6 /* EchdStreamInfoRequest.swift in Sources */,
 				A771A1C9294B2E350042C578 /* Player VR Context.swift in Sources */,
 				A771A1AD294B28240042C578 /* Player Activity Protocol.swift in Sources */,
+				A76CE6DC295B3A6D00D4B286 /* ECHD VSS Description.swift in Sources */,
 				A730D511294B4796001932B6 /* EchdSearchCameraListRequest.swift in Sources */,
 				A730D527294B4BA6001932B6 /* EchdArchiveControl.swift in Sources */,
 				A730D519294B49DB001932B6 /* EchdGetMapSettingsRequest.swift in Sources */,
@@ -691,6 +708,7 @@
 				A771A1CD294B2E350042C578 /* Player VSS Archive Context.swift in Sources */,
 				A771A1E4294B32A10042C578 /* EchdKeychainService.swift in Sources */,
 				A730D569294B5901001932B6 /* SudirSessionCookies.swift in Sources */,
+				A76CE6DE295B3D8A00D4B286 /* ECHD VSS List Request.swift in Sources */,
 				A730D582294B68CF001932B6 /* LabelsTexts.swift in Sources */,
 				A785416C294B3FD500417336 /* AppVersionHelper.swift in Sources */,
 				A771A1E3294B32A10042C578 /* EchdSettingsService.swift in Sources */,
@@ -761,6 +779,8 @@
 				A775081C294CAE240098449B /* Player Protocol.swift in Sources */,
 				A7854105294B3E0800417336 /* EchdKeepAliveRequest.swift in Sources */,
 				A771A1C6294B2E350042C578 /* Player Class.swift in Sources */,
+				A76CE6DA295B054F00D4B286 /* ECHD Server Settings Request.swift in Sources */,
+				A76CE6D7295AC30800D4B286 /* VideoAdmixture.swift in Sources */,
 				A730D52E294B4F86001932B6 /* AlertActions.swift in Sources */,
 				A771A1C7294B2E350042C578 /* Player Context.swift in Sources */,
 				A771A1EB294B32A10042C578 /* EchdMakeVideoArchiveService.swift in Sources */,

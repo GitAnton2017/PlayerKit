@@ -11,18 +11,22 @@ import Alamofire
 class EchdSettingsRequest: AbstractRequest {
     var dataRequest: DataRequest?
 
-    func request(parameters: [String : Any] = [:], fail: @escaping (Error) -> Void, success: @escaping (Int?, [String : Any?]) -> Void) {
+    func request(parameters: [String : Any] = [:],
+                 fail: @escaping (Error) -> Void,
+                 success: @escaping (Int?, [String : Any?]) -> Void) {
         
-        let queue = DispatchQueue(label: "com.netris.echdSettingsRequest", qos: .userInitiated, attributes: [.concurrent])
+        let queue = DispatchQueue(label: "com.netris.echdSettingsRequest",
+                                  qos: .userInitiated, attributes: [.concurrent])
         
         var headers = getHeaders()
+     
         headers["Content-Type"] = nil
 
-        dataRequest = EchdConnectionManager.sharedInstance.alamofireManager.request(
+        dataRequest = EchdConnectionManager
+           .sharedInstance.alamofireManager.request(
             getHost() + "/settings/ajaxGetSettings?source=user,environment,mw-portal",
             method: .get,
-            headers: headers
-            )
+            headers: headers)
             .responseJSON(queue: queue) { response in
 
                 if let url = response.response?.url {

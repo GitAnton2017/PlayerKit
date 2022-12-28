@@ -2,7 +2,7 @@
 //  ECHD VSS Controls Request.swift
 //  PlayerKitFramework
 //
-//  Created by Anton2016 on 17.12.2022.
+//  Created by Anton V. Kalinin on 17.12.2022.
 //
 
 import Alamofire

@@ -92,17 +92,7 @@ internal enum EchdConnectionManagerStatus{
     case error(error: NSError)
 }
 
-internal enum EchdConnectionManagerError: Error {
-    case none
-    case authorization
-    case keepAlive
-    case keepSettings
-    case noVSS
-    case noVSSControlURL
-    case noPhotoShotURL
-    case invalidPhotoShotData
-    
-}
+
 
 internal enum EchdPortalAddress {
  

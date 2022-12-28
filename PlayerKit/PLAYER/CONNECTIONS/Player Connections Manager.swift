@@ -65,8 +65,22 @@ internal protocol NTXPlayerConnectionsManager where Self: NSObject {
                             depth: Int,
                             resultHandler: @escaping VSSPhotoShotRequestResultHandler) -> AbstractRequest?
  
+  /// The adaptor should implement method for fetching client security server marker to be used to generate player admixture view.
+ 
+ typealias SecurityMarkerRequestHandler = (Result<String, Error>) -> ()
+ 
+ func requestClientSecurityMarker(resultHandler: @escaping SecurityMarkerRequestHandler) -> AbstractRequest?
+ 
+  /// The adaptor should implement method for fetching short camera description information from server.
+ 
+ typealias VSSShortDescriptionRequestHandler = (Result<VSSShortDescription?, Error>) -> ()
+ 
+ func requestVSSShortDescription(for device: InputDevice,
+                                 resultHandler: @escaping VSSShortDescriptionRequestHandler ) -> AbstractRequest?
  
 }
+
+
 
 
 @available(iOS 13.0, *)

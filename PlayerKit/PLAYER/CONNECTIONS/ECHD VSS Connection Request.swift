@@ -2,7 +2,7 @@
 //  ECHD VSS Connection Request.swift
 //  PlayerKitFramework
 //
-//  Created by Anton2016 on 17.12.2022.
+//  Created by Anton V. Kalinin on 17.12.2022.
 //
 
 import Alamofire
@@ -22,6 +22,7 @@ internal final class ECHDVSSRequest: AbstractRequest {
  }
  
  func getCookie() -> String { sessionCookie }
+ 
  func getHost()   -> String { NTXECHDManager.DefaultServerAddresses.main }
  
  internal func request(parameters: [String : Any] = [ : ],
@@ -41,16 +42,13 @@ internal final class ECHDVSSRequest: AbstractRequest {
             method: .get,
             parameters: parameters,
             encoding: URLEncoding.queryString,
-            headers: getHeaders()).responseJSON(queue: queue) { response in
-              if let error = response.error {
-               fail(error)
-               return
-              }
-              
-              
-              if let json = try? response.result.get() as? [String: Any] {
-               success(response.response?.statusCode, json)
-              }
+            headers: getHeaders())
+   .responseJSON(queue: queue) { response in
+     if let error = response.error { fail(error) ; return }
+     
+     if let json = try? response.result.get() as? [String: Any] {
+      success(response.response?.statusCode, json)
+     }
   }
  }
  

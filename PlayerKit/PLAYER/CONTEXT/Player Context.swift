@@ -51,7 +51,8 @@ internal protocol ContextPlayer where Self: NSObject {
   func replaceCurrentItem(with item: PlayerItem?)
   ///Replaces the current item with a new item.
   ///
-  ///
+  
+  
   
  ///*Creating a Player
  init(url: URL)
@@ -77,6 +78,7 @@ internal protocol ContextPlayable where Self: AnyObject {
  
  associatedtype Player: ContextPlayer
  var player: Player? { get set }
+ var videoRect: CGRect { get }
  
 }
 
@@ -106,6 +108,7 @@ internal protocol NTXPlayerContext where Self: UIView {
                     startHandler: @escaping StartHandlerType )
  
  
+ 
 }
 
 internal enum NTXPlayerContextError: Error  {
@@ -127,6 +130,8 @@ internal extension NTXPlayerContext  {
   get { player.rate }
   set { player.rate = newValue }
  }
+ 
+ var videoRect: CGRect { playerLayer.videoRect }
  
  var isMuted: Bool {
   get { player.isMuted  }

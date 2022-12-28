@@ -30,7 +30,7 @@ import Combine
 ///
 
 
-internal typealias NTXECHDPlayer<Delegate: NTXVideoModuleDelegate>
+internal typealias NTXECHDPlayer<Delegate: NTXVideoPlayerDelegate>
  = NTXMobileNativePlayer<AVPlayerLayerView, MDVRPlayerView, NTXECHDManager, Delegate>
 where Delegate.Device == Int 
   
@@ -39,17 +39,38 @@ where Delegate.Device == Int
 internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
                                            PlayerVRContext: NTXPlayerContext,
                                            Manager:         NTXPlayerConnectionsManager,
-                                           Delegate:        NTXVideoModuleDelegate>: NSObject,
+                                           Delegate:        NTXVideoPlayerDelegate>: NSObject,
                                                                                      NTXMobileNativePlayerProtocol
- where Delegate.Device == Manager.InputDevice {
+where Delegate.Device == Manager.InputDevice {
+
+
+ internal var viewModeTimer: Timer? {
+  didSet { oldValue?.invalidate() }
+ }
+
+ internal var archivePhotoShotsPrefetchRequests = [ AbstractRequest ]()
+ internal var viewModeLivePhotoShotsRequests    = [ AbstractRequest ]()
+ internal var viewModeArchivePhotoShotsRequests = [ AbstractRequest ]()
  
+ internal var deviceConnectionRequest           :   AbstractRequest?
+ internal var archiveControlsRequest            :   AbstractRequest?
+ internal var livePhotoShotRequest              :   AbstractRequest?
+ internal var securityMarkerRequest             :   AbstractRequest?
+ internal var descriptionInfoRequest            :   AbstractRequest?
+
+ internal lazy var  playerArchiveImagesCache = { () -> ArchiveImagesCache in
+  let cache = ArchiveImagesCache()
+  cache.delegate = self
+  cache.interval = archiveTimeStepSeconds
+  cache.prefetchSize = 200
+  cache.defaultImageQuality = .low
+  return cache
+ }()
  
  internal weak var playerStateDelegate: Delegate?
  
  internal let  shutdownHandler: (Delegate.Device) -> ()
- 
- internal var requests = [AbstractRequest]()
- 
+
  
  internal var currentVSS: Manager.Device? {
   didSet {
@@ -64,9 +85,18 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
   }
  }
  
+ internal var currentVSSDescription:  VSSShortDescription? {
+  didSet {
+   let hasAudio = currentVSSDescription?.hasAudio ?? false
+   self[ .toggleMuting ]?.isUserInteractionEnabled = hasAudio
+   self[ .toggleMuting ]?.alpha = hasAudio ? 1.0 : 0.5
+   playerMutedStateView.isHidden = !hasAudio
+  }
+ }
+ 
  internal var currentVSSArchiveControls: Manager.ArchiveControl?
  
- internal var currentPhotoShot: Manager.PhotoShot?
+ internal var currentPhotoShot: Manager.PhotoShot? 
  
  private let playerIQ = DispatchQueue(label: "NTXMobileNativePlayer.Player.Isolation.Queue")
  
@@ -92,14 +122,16 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
  
  private let stateIQ = DispatchQueue(label: "NTXMobileNativePlayer.State.Isolation.Queue")
  
- internal var notificationsTokens = [ Any ]()
+ internal var notificationsTokens = [ Any ]() {
+  didSet { debugPrint ("PLAYER - notificationsTokens", notificationsTokens) }
+ }
  
  internal var playerState: any NTXPlayerState {
   get { stateIQ.sync  { __state__ } }
   set { stateIQ.sync  { __state__ = newValue  }}
  }
  
- private var __currentState__: VideoPlayerState = .initial
+ private var __currentState__: VideoPlayerState = .loading
  
  internal var currentState: VideoPlayerState {
   get { stateIQ.sync  { __currentState__ } }
@@ -128,9 +160,9 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
  
  internal var admixtureView: UIView?
  
- internal var isVideoMode = false {
+ internal var isviewMode = false {
   didSet {
-   if isVideoMode {
+   if isviewMode {
     playerPreloadView.isHidden = true
    } else {
     playerPreloadView.isHidden = false
@@ -139,6 +171,15 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
    }
   }
  }
+ 
+ internal var viewModeInterval: TimeInterval = 1.0 {
+  didSet {
+   guard viewModeInterval != oldValue else { return }
+   updateViewMode(viewModeInterval: viewModeInterval)
+  }
+ }
+ 
+ internal var viewModePolling: Bool = true
  
  internal let transitionDurationOfContexts: CGFloat = 1.0
  
@@ -170,6 +211,12 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
  
  var controlDebouceTimers = [NTXPlayerActions : Timer]()
  
+ var controlsActivityTimer: Timer?
+ 
+ var viewModeArchiveCurrentTimePoint: Int?
+ 
+ var admixtureResizeToken: NSKeyValueObservation?
+ 
  internal init(playerOwnerView: UIView,
              playerContainerView: UIView,
              playerPreloadView: UIImageView,
@@ -197,12 +244,14 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
   self.shutdownHandler = shutdownHandler
   
   super.init()
- 
-  
+  debugPrint ("@@@@@@@@@@@@@@@@@@@@@+++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+  debugPrint ("<<<< ***** Player Initialized ***** >>>>", #function)
+  debugPrint ("@@@@@@@@@@@@@@@@@@@@@+++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
  }
  
  private let alertDispatcher = DispatchQueue(label: "Player.alertDispatcher")
  private let alertSemaphore = DispatchSemaphore(value: 1)
+ 
  private let duration: TimeInterval = 1.0
  private let removeDelay: TimeInterval = 2.0
  
@@ -256,6 +305,8 @@ internal final class NTXMobileNativePlayer<PlayerContext:   NTXPlayerContext,
  
  deinit {
   debugPrint( " <<<<<<< **** PLAYER CLASS IS DESTROYED **** >>>>>>")
+  
+  playerContainerView.removeFromSuperview()
   
   if #available(iOS 13.0, *) {
    notificationsTokens.compactMap{ $0 as? AnyCancellable }.forEach{ $0.cancel() }

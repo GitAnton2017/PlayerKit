@@ -10,7 +10,7 @@ import UIKit
 
 ///# THIS IS DEFAULT PLAYER FACTORY (KIT) FOR ECHD CONNECTIONS WITH GENERIC DELEGATE:
 
-typealias NTXECHDPlayerKit<Delegate: NTXVideoModuleDelegate>
+typealias NTXECHDPlayerKit<Delegate: NTXVideoPlayerDelegate>
   = NTXDefaultPlayerKit<AVPlayerLayerView,
                         MDVRPlayerView,
                         NTXECHDManager,
@@ -20,14 +20,14 @@ typealias NTXECHDPlayerKit<Delegate: NTXVideoModuleDelegate>
 /// - MDVRPlayerView - concrete impl of  VRPlayer view
 /// - AVPlayerLayerView - concrete impl of  player live steraming facility.
 /// - Default set builders of  player working contexts and views.
-/// - Generic Delegate. NTXVideoModuleDelegate
+/// - Generic Delegate. NTXVideoPlayerDelegate
 
 ///#THIS IS GENERIC PLAYER FACTORY (KIT) THAT MAKES WORKING PLAYERS INSTANCE USING  SET OF COMPONENTS BUILDERS.
 
 final internal class NTXDefaultPlayerKit<Context:   NTXPlayerContext,
                                          VRContext: NTXPlayerContext,
                                          Manager:   NTXPlayerConnectionsManager,
-                                         Delegate:  NTXVideoModuleDelegate>: NSObject, NTXPlayerAbstractKit
+                                         Delegate:  NTXVideoPlayerDelegate>: NSObject, NTXPlayerAbstractKit
 where Delegate.Device == Manager.InputDevice {
  
 
@@ -88,6 +88,7 @@ where Delegate.Device == Manager.InputDevice {
     
     NTXDefaultPlayerButton(action: .stop,               player: $0) {  $0.stop()            },
     NTXDefaultPlayerButton(action: .refresh,            player: $0) {  $0.refresh()         },
+    NTXDefaultPlayerButton(action: .viewMode,           player: $0) {  $0.toggleViewMode()  },
     NTXDefaultPlayerButton(action: .toggleMuting,       player: $0) {  $0.toggleMuting()    },
     
    ]

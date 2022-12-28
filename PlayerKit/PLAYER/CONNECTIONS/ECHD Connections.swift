@@ -2,7 +2,7 @@
 //  ECHD Connections.swift
 //  PlayerKitFramework
 //
-//  Created by Anton2016 on 16.12.2022.
+//  Created by Anton V. Kalinin on 16.12.2022.
 //
 
 
@@ -18,10 +18,26 @@ public struct NTXCredentials: Codable {
  
 }
 
+internal enum EchdConnectionManagerError: Error {
+ case none
+ case authorization
+ case keepAlive
+ case keepSettings
+ case noVSS
+ case noVSSControlURL
+ case noPhotoShotURL
+ case invalidPhotoShotData
+ case invalidSecurityData(json: [ String: Any ])
+ case invalidCameraFilterFormat
+ case invalidCameraDescriptionData(json: [ String: Any ])
+ 
+}
+
 import Foundation
 import Alamofire
 
 internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
+ 
  
  struct DefaultServerAddresses {
   
@@ -130,6 +146,7 @@ internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
   
   let cameraRequest = ECHDVSSRequest(cameraId: searchResult.id, sessionCookie: sessionCookie )
   
+  
   self.cameraRequest = cameraRequest
   
   cameraRequest.request{ error in
@@ -141,6 +158,7 @@ internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
     return
    }
    
+   //debugPrint("<<<VSS DESCRIPTION>>> \n", json)
    resultHandler(.success(.init(data: json as [String : AnyObject])))
   }
   
@@ -150,6 +168,7 @@ internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
  }
  
   /// VSS ARCHIVE CONTROL INFORMATION CONTEXT REQUEST IMPL.
+  ///
  internal func requestVSSArchive(for VSS: EchdCamera,
                                  resultHandler: @escaping VSSArchiveRequestResultHandler) -> AbstractRequest? {
   
@@ -164,7 +183,8 @@ internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
   
   archiveControlsRequest.request{ error in
    resultHandler(.failure(error))
-  } success: { ( httpStatusCode, json ) in
+  } success: { ( _ , json ) in
+//   debugPrint("<<<VSS ARCHIVE CONTROLs>>> \n", json)
    resultHandler(.success(.init(data: json as [String : AnyObject])))
   }
   
@@ -188,7 +208,7 @@ internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
   photoRequest.request{ error in
    resultHandler(.failure(error))
    
-  } success: { ( httpStatuscode, response ) in
+  } success: { ( _ , response ) in
    guard let data = response["image"] as? Data else {
     resultHandler(.failure(EchdConnectionManagerError.invalidPhotoShotData))
     return
@@ -202,8 +222,7 @@ internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
  }
  
  
- internal func requestVSSArchiveShot(for VSS: EchdCamera,
-                                     depth: Int,
+ internal func requestVSSArchiveShot(for VSS: EchdCamera, depth: Int,
                                      resultHandler: @escaping VSSPhotoShotRequestResultHandler) -> AbstractRequest? {
   guard depth > 0 else { return nil }
   
@@ -214,12 +233,12 @@ internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
   
   let shotURLString = url + "&ts=\(depth)"
   
-  let photoRequest = EchdMakePhotoRequest(url: shotURLString, camera: 0)
+  let photoRequest = ECHDPhotoRequest(url: shotURLString, sessionCookie: sessionCookie)
   
   photoRequest.request{ error in
    resultHandler(.failure(error))
    
-  } success: { ( httpStatuscode, response ) in
+  } success: { ( _ , response ) in
    guard let data = response["image"] as? Data else {
     resultHandler(.failure(EchdConnectionManagerError.invalidPhotoShotData))
     return
@@ -231,9 +250,75 @@ internal class NTXECHDManager: NSObject, NTXPlayerConnectionsManager {
   return photoRequest
  }
  
+ private var securityMarker: String?
  
  
+ func requestClientSecurityMarker(resultHandler: @escaping SecurityMarkerRequestHandler) -> AbstractRequest? {
+  
+  if let securityMarker = self.securityMarker {
+   resultHandler(.success(securityMarker))
+   return nil
+  }
+  
+  let settingsRequest = ECHDServerSettingsRequest(sessionCookie: sessionCookie)
+  
+  settingsRequest.request{ error in
+   resultHandler(.failure(error))
+  } success: { [ weak self ] ( _ , json ) in
+   
+   guard let self = self else { return }
+   
+   guard let environment = json["environment"] as? [ String : AnyObject ] else {
+    resultHandler(.failure(EchdConnectionManagerError.invalidSecurityData(json: json as [String : Any])))
+    return
+   }
+ 
+   guard let userProfile = environment["userProfile"] as? [ String : AnyObject ] else {
+    resultHandler(.failure(EchdConnectionManagerError.invalidSecurityData(json: environment as [String : Any])))
+    return
+   }
+     
+   guard let securityMarker = userProfile["securityMarker"] as? String else {
+    resultHandler(.failure(EchdConnectionManagerError.invalidSecurityData(json: userProfile as [String : Any])))
+    return
+   }
+   
+   DispatchQueue.main.async { [ weak self ] in
+    self?.securityMarker = securityMarker
+   }
+   
+   resultHandler(.success(securityMarker))
+  }
+  
+  return settingsRequest
+ }
  
  
+ func requestVSSShortDescription(for device: InputDevice,
+                                 resultHandler: @escaping VSSShortDescriptionRequestHandler ) -> AbstractRequest? {
+  
+  let vssDescriptionRequest = ECHDVSSListRequest(cameraIDs: [device.id], sessionCookie: sessionCookie)
+  
+  vssDescriptionRequest.request{ error in
+   debugPrint(#function, error)
+   resultHandler(.failure(error))
+  } success: { ( _ , json ) in
+   guard let success = json["success"] as? Bool, success else {
+    resultHandler(.failure(EchdConnectionManagerError.invalidCameraDescriptionData(json: json as [String : Any])))
+    return
+   }
+   
+   guard let cameras = json["cameras"] as? [[String : Any]]  else {
+    resultHandler(.failure(EchdConnectionManagerError.invalidCameraDescriptionData(json: json as [String : Any])))
+    return
+   }
+   
+   guard let camera = cameras.first else { resultHandler(.success(nil)); return }
+   
+   resultHandler(.success(.init(json: camera)))
+  }
+  
+  return vssDescriptionRequest
+ }
  
 }

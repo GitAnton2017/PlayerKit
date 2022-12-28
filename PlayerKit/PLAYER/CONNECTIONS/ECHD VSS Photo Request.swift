@@ -2,12 +2,13 @@
 //  ECHD VSS Photo Request.swift
 //  PlayerKitFramework
 //
-//  Created by Anton2016 on 17.12.2022.
+//  Created by Anton V. Kalinin on 17.12.2022.
 //
 
 import Alamofire
 
 internal final class ECHDPhotoRequest: AbstractRequest {
+ 
  internal var dataRequest: DataRequest?
  
  private var url: String
@@ -22,7 +23,7 @@ internal final class ECHDPhotoRequest: AbstractRequest {
  func getCookie() -> String { sessionCookie }
  
  internal func request(parameters: [String : Any] = [:],
-                       fail: @escaping (Error) -> (),
+                       fail:    @escaping (Error) -> (),
                        success: @escaping (Int?, [String : Any?]) -> () ) {
   
   let queue = DispatchQueue(label: "com.netris.echdMakePhotoRequest",
@@ -32,7 +33,8 @@ internal final class ECHDPhotoRequest: AbstractRequest {
   dataRequest = NTXECHDManager.alamofireSession
    .request( url, method: .get,
              parameters: parameters,
-             headers: getHeaders()).responseData(queue: queue) { response in
+             headers: getHeaders())
+   .responseData(queue: queue) { response in
     guard response.error == nil else {
      fail(response.error!)
      return

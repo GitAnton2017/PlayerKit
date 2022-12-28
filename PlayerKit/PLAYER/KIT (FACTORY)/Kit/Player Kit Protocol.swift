@@ -2,7 +2,7 @@
 //  Player Kit Protocol.swift
 //  PlayerKitFramework
 //
-//  Created by Anton2016 on 16.12.2022.
+//  Created by Anton V. Kalinin on 16.12.2022.
 //
 
 import UIKit

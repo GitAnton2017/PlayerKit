@@ -9,11 +9,13 @@
 import Alamofire
 import UIKit
 
-internal protocol AbstractRequest {
+internal protocol AbstractRequest: AnyObject {
     
     var dataRequest: DataRequest? { get set }
     
-    func request(parameters:[String: Any], fail: @escaping (Error) -> Void, success: @escaping(Int?, [String: Any?]) -> Void)
+    func request(parameters:[String: Any],
+                 fail: @escaping (Error) -> Void,
+                 success: @escaping(Int?, [String: Any?]) -> Void)
     
     func cancel()
     
@@ -25,6 +27,8 @@ internal protocol AbstractRequest {
 }
 
 internal extension AbstractRequest {
+ 
+    var requestURL: URL? { dataRequest?.request?.url }
  
     func getCookie() -> String { EchdConnectionManager.sharedInstance.getCookie() ?? "" }
     

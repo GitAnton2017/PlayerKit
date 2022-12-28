@@ -30,10 +30,10 @@ extension UIView {
   
   container.addSubview(self)
   
-  container.topAnchor     .constraint(equalTo:  topAnchor,      constant: -insets.top   ).isActive = true
-  container.bottomAnchor  .constraint(equalTo:  bottomAnchor,   constant:  insets.bottom).isActive = true
+  container.topAnchor     .constraint(equalTo:  topAnchor,      constant:  -insets.top   ).isActive = true
+  container.bottomAnchor  .constraint(equalTo:  bottomAnchor,   constant:   insets.bottom).isActive = true
   container.leadingAnchor .constraint(equalTo:  leadingAnchor,  constant:  -insets.left  ).isActive = true
-  container.trailingAnchor.constraint(equalTo:  trailingAnchor, constant: insets.right ).isActive = true
+  container.trailingAnchor.constraint(equalTo:  trailingAnchor, constant:   insets.right ).isActive = true
   
   return self
  }
@@ -60,7 +60,7 @@ extension UIView {
   NSLayoutConstraint.activate(regular)
   
   
-  let token = container.observe(\.frame, options: [.new] ) { _ , change  in
+  let token = container.observe(\.bounds, options: [.new] ) { _ , change  in
    
    NSLayoutConstraint.deactivate(all)
 
@@ -101,7 +101,7 @@ extension UIView {
   
   NSLayoutConstraint.activate(regular)
   
-  let token = container.observe(\.frame, options: [.new]) { _ , change  in
+  let token = container.observe(\.bounds, options: [.new]) { _ , change  in
    
    NSLayoutConstraint.deactivate(all)
    
@@ -142,7 +142,7 @@ extension UIView {
   
   NSLayoutConstraint.activate(regular)
   
-  let token = container.observe(\.frame, options: [.new]) { _ , change  in
+  let token = container.observe(\.bounds, options: [.new]) { _ , change  in
    
    NSLayoutConstraint.deactivate(all)
    
@@ -166,7 +166,7 @@ extension UIView {
                shift: CGPoint = .zero,
                changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
   
-  translatesAutoresizingMaskIntoConstraints = false
+  self.translatesAutoresizingMaskIntoConstraints = false
   
   container.addSubview(self)
   
@@ -184,7 +184,8 @@ extension UIView {
   
   NSLayoutConstraint.activate(regular)
   
-  let token = container.observe(\.frame, options: [.new]) { _ , change  in
+ 
+  let token = container.observe(\.bounds, options: [.new]) { _ , change  in
    
    NSLayoutConstraint.deactivate(all)
    

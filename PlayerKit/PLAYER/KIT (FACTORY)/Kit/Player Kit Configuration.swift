@@ -2,7 +2,7 @@
 //  Player Kit Configuration.swift
 //  PlayerKitFramework
 //
-//  Created by Anton2016 on 16.12.2022.
+//  Created by Anton V. Kalinin on 16.12.2022.
 //
 
 import UIKit
@@ -22,6 +22,8 @@ internal struct NTXPlayerConfiguration <Manager  : NTXPlayerConnectionsManager,
  internal let preloadViewInsetsFromContainer:               UIEdgeInsets
  internal let playerViewInsetsFromContainer:                UIEdgeInsets
  internal let playerVRViewInsetsFromContainer:              UIEdgeInsets
+ 
+ internal var securityMarker: String?
  
  internal init (playerOwnerView:                           UIView,
                 inputVSS:                                  InputVSS,

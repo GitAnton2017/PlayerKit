@@ -21,6 +21,7 @@ public enum NTXPlayerActions: String, Hashable, CaseIterable {
  case refresh            = "arrow.clockwise.circle.fill"
  case record             = "recordingtape.circle.fill"
  case showVR             = "rotate.3d"
+ case viewMode           = "film.circle"
  
  var imageName: String { rawValue }
 }
@@ -84,9 +85,12 @@ internal protocol NTXPlayerControl where Self: UIView {
 
 final internal class NTXDefaultPlayerButton<Player: NTXMobileNativePlayerProtocol> : UIButton,
                                                                                      NTXPlayerControl {
+
  var debounceInterval: TimeInterval = 0.0
  
- unowned internal let player: Player
+ internal unowned var player: Player
+ 
+ private weak var _player: Player?
  
  internal let playerAction: NTXPlayerActions
  
@@ -128,6 +132,7 @@ final internal class NTXDefaultPlayerButton<Player: NTXMobileNativePlayerProtoco
                actionHandler: @escaping ActionHandlerType) {
   
   self.player = player
+  self._player = player
   self.playerAction = action
   self.group = group
   self.actionHandler = actionHandler
@@ -151,11 +156,34 @@ final internal class NTXDefaultPlayerButton<Player: NTXMobileNativePlayerProtoco
  }
  
  @objc func released() {
+  activateControlsHidden()
   timer?.invalidate()
   timer = nil
  }
  
+ 
+ private func cancelControlsHidden() {
+  player.controlsActivityTimer?.invalidate()
+ }
+ 
+ private func activateControlsHidden(){
+
+  guard let player = _player else { return }
+  guard let touchView = player.playerTouchView else { return }
+  
+  let pa = player.animateControlsPanels(hidden: true) { [ weak touchView ] in
+   touchView?.isHidden = false
+  }
+  
+  player.controlsActivityTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false){ _ in
+   pa?.startAnimation()
+  }
+ 
+ }
+ 
  @objc func pressed() {
+  
+  cancelControlsHidden()
   
   guard debounceInterval > 0.0  else {
    actionHandler(player)
@@ -211,6 +239,8 @@ internal extension NTXPlayerControl {
   
   let stackView = controlGroupStack(type: groupType, of: container)
   
+  self.translatesAutoresizingMaskIntoConstraints = false
+  
   stackView.addArrangedSubview(self)
   
   var tps: NSLayoutConstraint?
@@ -262,8 +292,8 @@ internal extension NTXPlayerControl {
   
   NSLayoutConstraint.activate(regular)
   
-  let token = container.observe(\.frame, options: [.new]) { _ , change  in
-   
+  let token = container.observe(\.bounds, options: [.new]) { _ , change  in
+  
    NSLayoutConstraint.deactivate(all)
    
    guard let frame = change.newValue else { return }
