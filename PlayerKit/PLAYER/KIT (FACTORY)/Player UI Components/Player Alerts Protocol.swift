@@ -61,11 +61,10 @@ internal final class NTXPlayerDefaultAlertView:  UIView, NTXPlayerAlertRepresent
   addSubview(label)
   label.numberOfLines = 0
   label.textAlignment = .center
-  //label.minimumScaleFactor = 0.25
+  label.minimumScaleFactor = 0.05
   label.font = .systemFont(ofSize: 15)
-  label.lineBreakMode = .byWordWrapping
-//  label.adjustsFontForContentSizeCategory = true
-//  label.adjustsFontSizeToFitWidth = true
+  label.adjustsFontForContentSizeCategory = true
+  label.adjustsFontSizeToFitWidth = true
   
   return label
  }()

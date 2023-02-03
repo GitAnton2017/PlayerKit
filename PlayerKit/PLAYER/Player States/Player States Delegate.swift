@@ -41,18 +41,18 @@ public protocol NTXVideoPlayerDelegate: AnyObject {
 
 public extension NTXVideoPlayerDelegate {
  func playerWillChangeState         (deviceID: Device.VSSIDType, to state:  NTXVideoPlayerStates) {
-  debugPrint("PLAYER DELEGATE MESSAGE <\(#function)> FROM VSS ID (\(deviceID)) State: [\(state.rawValue)]")
+//  debugPrint("PLAYER DELEGATE MESSAGE <\(#function)> FROM VSS ID (\(deviceID)) State: [\(state.rawValue)]")
   
  }
  
  func playerDidChangeState          (deviceID: Device.VSSIDType, to state:  NTXVideoPlayerStates) {
-  debugPrint("PLAYER DELEGATE MESSAGE <\(#function)> FROM VSS ID (\(deviceID)) State: [\(state.rawValue)]")
+//  debugPrint("PLAYER DELEGATE MESSAGE <\(#function)> FROM VSS ID (\(deviceID)) State: [\(state.rawValue)]")
   
   videoModuleDelegate?.didChangeState(cameraId: "\(deviceID)", state: state)
  }
  
  func playerDidFailedWithError      (deviceID: Device.VSSIDType, with error:  NTXVideoPlayerError<Device>){
-  debugPrint("PLAYER DELEGATE MESSAGE <\(#function)> FROM VSS ID (\(deviceID)) Error: [\(error)]")
+//  debugPrint("PLAYER DELEGATE MESSAGE <\(#function)> FROM VSS ID (\(deviceID)) Error: [\(error)]")
 
   switch error {
     

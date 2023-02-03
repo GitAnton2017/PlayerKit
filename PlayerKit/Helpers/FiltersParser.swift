@@ -134,7 +134,7 @@ class FiltersParser: NSObject {
                     UserDefaults.standard.set(data, forKey: "filter")
                 }
             } catch {
-                debugPrint("FiltersParser::saveFilter: Error \(error.localizedDescription)")
+                debugPrint("FiltersParser::saveFilter: Error \(error)")
             }
             
             UserDefaults.standard.set(self.filterIsOn, forKey: "filterIsOn")
@@ -288,7 +288,7 @@ class FiltersParser: NSObject {
                     return savedFilter
                 }
             } catch {
-                debugPrint("FiltersParser::getSavedFilter: Error \(error.localizedDescription)")
+                debugPrint("FiltersParser::getSavedFilter: Error \(error)")
             }
         }
         return nil

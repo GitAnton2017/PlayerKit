@@ -8,17 +8,12 @@
 
 //import UIKit
 //
- typealias JSONObject = [String : Any]
+
 //
 //typealias Cell = Tile
 //typealias Zoom = Int
 //
-struct Time {
-    static let timeoutForRequests: TimeInterval = 90
-    static let buttonAnimationDuration = 0.33
-    static let ptzCommandImageUpdateDelay: TimeInterval = 3
-    static let timeAvailableToBackgroundState: TimeInterval = 60 * 5
-}
+
 //
 //struct TableViewCellIdentifiers {
 //    static let ticketCell = TicketTableViewCell.identifier

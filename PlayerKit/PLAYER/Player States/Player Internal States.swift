@@ -16,23 +16,23 @@ internal protocol NTXPlayerState  {
 internal extension NTXPlayerState where Player.Delegate.Device == Player.Manager.InputDevice {
  
  typealias ConnectionManager      = Player.Manager
- typealias KeepAliveState         = ConnectionManager.KeepAliveState
  
- typealias KeepAlivePlayerMode    = KeepAliveState.Mode
- typealias KeepAlivePlayerState   = KeepAliveState.State
- typealias KeepAlivePlayerArchive = KeepAliveState.Archive
+// typealias KeepAliveState         = ConnectionManager.KeepAliveState
+// typealias KeepAlivePlayerMode    = KeepAliveState.Mode
+// typealias KeepAlivePlayerState   = KeepAliveState.State
+// typealias KeepAlivePlayerArchive = KeepAliveState.Archive
  
  var inputSearchVSS: Player.Manager.InputDevice { player.inputVSSSearchResult }
  
  var connectionsManager: ConnectionManager  { player.connectionsManager }
  
- func updateKeepAliveState(to state: KeepAliveState) throws {
-  
-  debugPrint (#function, state)
-  
-  try connectionsManager.changeVSSStateForBeating(activePlayerState: state,
-                                                  for: inputSearchVSS)
- }
+// func updateKeepAliveState(to state: KeepAliveState) throws {
+//
+//  debugPrint (#function, state)
+//
+// try connectionsManager.changeVSSStateForBeating(activePlayerState: state,
+//                                               for: inputSearchVSS)
+// }
  
  func allControlsExcept(_ action: NTXPlayerActions, state: Bool) -> [NTXPlayerActions : Bool] {
   Dictionary(uniqueKeysWithValues: NTXPlayerActions.allCases.map{ ($0, $0 == action ? !state : state) })
@@ -85,9 +85,9 @@ internal extension NTXPlayerState where Player.Delegate.Device == Player.Manager
   }
  }
  
- func animateControlsEnabledState( mask statesMap: [NTXPlayerActions : Bool],
+ func animateControlsEnabledState( mask statesMap: [ NTXPlayerActions : Bool] ,
                                    duration: TimeInterval = NTXPlayerStates.controlStateAnimationDuration,
-                                   completion: (() -> ())? = nil) {
+                                   completion: ( () -> () )? = nil) {
   UIView.animate(withDuration: duration) { [ weak player ] in
    statesMap.forEach { (action, state) in
     player?[action]?.alpha = state ? 1.0 : NTXPlayerStates.controlDisabledOpacity
@@ -104,11 +104,70 @@ internal extension NTXPlayerState where Player.Delegate.Device == Player.Manager
  
 }
 
-internal enum NTXPlayerError: Error {
+internal enum NTXPlayerError: Error, CustomDebugStringConvertible {
  
+ var prefix: String { "PLAYER STATES ERROR: "}
+ 
+ var debugDescription: String {
+  switch self {
+   case .VSSConnectionFailed(error: let error):
+    return prefix + "VSS (Camera) Initial Connection Request Failed - [\(error)]"
+   case .snapshotPreloadFailed(error: let error):
+    return prefix + "VSS (Camera) Live Snapshot Request Failed - [\(error)]"
+   case .liveviewModeLoadFailed(error: let error, date: let date):
+    return prefix + "VSS (Camera) Live View Mode Request Failed at timepoint: [\(date)] - [\(error)]"
+   case .invalidVSSConnectionJSONObject(json: let json):
+    return prefix + "Invalid VSS (Camera) Request JSON Object: [\(json)]"
+   case .invalidArchiveControlsJSONObject(json: let json):
+    return prefix + "Invalid VSS (Camera) Archive Controls Request JSON Object: [\(json)]"
+   case .invalidSettingsJSONObject(json: let json):
+    return prefix + "Invalid VSS (Camera) Settings Request JSON Object: [\(json)]"
+   case .invalidVSSListJSONObject(json: let json):
+    return prefix + "Invalid VSS (Camera) List Request JSON Object: [\(json)]"
+   case .VSSConnectionRetryCountEcxeeded:
+    return prefix + "VSS (Camera) Initial Connection Retry Count Ecxeeded"
+   case .playerContextFailed(error: let error):
+    return prefix + "VSS (Camera) Playback Context Failed to play from provided resource - [\(error)]"
+   case .playerContextRetryCountEcxeeded:
+    return prefix + "VSS (Camera) Playback Context Retry Count Ecxeeded"
+   case .archiveRequestFailed(error: let error):
+    return prefix + "VSS (Camera) Archive Controls Request Failed - [\(error)]"
+   case .noStreamingURL:
+    return prefix + "No streaming URL was found for live streaming"
+   case .keepAliveStateUpdateFailed(error: let error):
+    return prefix + "Keep Alive Service Failure - [\(error)]"
+   case .stateError(error: let error):
+    return prefix + "Internal Player State Processing Failure - [\(error)]"
+   case .noLastEnteredBackground:
+    return prefix + "No Last Entered Background Time Found!"
+   case .unauthorized(code: let code):
+    return prefix + "Player is not Authorised to Play from VSS Resource. Status Code - \(code)"
+   case .noArchiveShotsURL:
+    return prefix + "No Archive Shots URL Found"
+   case .archiveShotsPrefetchFailed(error: let error, depth: let depth, url: let url):
+    return prefix + """
+                    Archive Shots Prefetch Failed - \(error)
+                    at depth: [\(depth)]
+                    from url: [\(String(describing: url))]
+                    """
+   
+   case .contextFailedToPlayArchive(error: let error, from: let from):
+    return prefix + "Context Failed to Play Archive - \(error) from url: [\(String(describing: from))]"
+   case .failedToFetchDescriptionInfo(error: let error):
+    return prefix + "Failed To Fetch VSS (Camera) Description Info - \(error)"
+  }
+ }
+ 
+
  case snapshotPreloadFailed           (error: Error)
  case liveviewModeLoadFailed          (error: Error, date: Date)
  case VSSConnectionFailed             (error: Error)
+ 
+ case invalidVSSConnectionJSONObject  (json: Any)
+ case invalidArchiveControlsJSONObject(json: Any)
+ case invalidSettingsJSONObject       (json: Any)
+ case invalidVSSListJSONObject        (json: Any)
+ 
  case VSSConnectionRetryCountEcxeeded
  case playerContextFailed             (error: Error)
  case playerContextRetryCountEcxeeded
@@ -147,11 +206,10 @@ internal enum NTXPlayerStates {
   
   internal unowned let player: P
   
-  
   internal func handle(priorState: (any NTXPlayerState)? ) throws  {
+   
    debugPrint ("<<< ***** PLAYER INITIAL STATE ***** >>>")
  
-   
     //Can be handled only initially when there is no prior state at all!
    
    if let priorState = priorState {
@@ -176,8 +234,7 @@ internal enum NTXPlayerStates {
    player.playerPreloadView.isHidden = false  // show this first & activity indicator
    
     //ZP = 3 in Owner view
-   player.playerContainerView.bringSubviewToFront(player.playerActivityIndicator)
-   player.playerActivityIndicator.startAnimating()
+  
    
     //ZP = 4 in Owner view
    player.playerContext.isMuted = true
@@ -204,7 +261,10 @@ internal enum NTXPlayerStates {
    
    
     //ZP = 5
-   player.controlGroups.forEach{player.playerContainerView.bringSubviewToFront($0)}
+   player.controlGroups.forEach{
+    $0.isHidden = !player.showsInternalControls
+    player.playerContainerView.bringSubviewToFront($0)
+   }
    
     //ZP = 6
    player.playerContainerView.bringSubviewToFront(player.playerAlertView)
@@ -217,6 +277,11 @@ internal enum NTXPlayerStates {
    
     //ZP = 7
    
+   player.playerContainerView.bringSubviewToFront(player.playerActivityIndicator)
+   player.playerActivityIndicator.startAnimating()
+   
+   player.playerAlertView.isHidden = !player.showsInternalAlerts
+   
    player.playerStateDelegate?
     .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .loading)
    
@@ -228,7 +293,7 @@ internal enum NTXPlayerStates {
   
   private func willResignActiveHandler(_ n: Notification) {
    
-   debugPrint ("APP STATE CHANGE TO ", #function)
+   debugPrint ("[ INFO MESSAGE! ] APP STATE WILL CHANGE TO <BACKGROUND>", #function)
    
    player.lastTimeAppEnteredBackground = Date()
    
@@ -264,7 +329,7 @@ internal enum NTXPlayerStates {
   
   private func willEnterForegroundHandler(_ n: Notification) {
    
-   debugPrint ("APP STATE CHANGE TO ", #function)
+   debugPrint ("[ INFO MESSAGE! ] APP STATE WILL CHANGE TO <FOREGROUND>", #function)
    
    guard let lastBack = player.lastTimeAppEnteredBackground?.timeIntervalSince1970 else {
     
@@ -376,10 +441,12 @@ internal enum NTXPlayerStates {
     switch result {
      case let .success(deviceContext):
       DispatchQueue.main.async { [ weak player ] in
-       debugPrint ("<<<VSS CONNECTION REQUEST SUCCESSFUL>>>: \(deviceContext)", #function)
+       debugPrint ("[+ SUCCESS INFO +] VSS CONNECTION REQUEST SUCCESSFUL: \(deviceContext)", #function)
        player?.currentVSS = deviceContext
       }
-        ///``GO TO CONNECTED STATE WITH OBTAINED VSS CONTEXT OBJECT!!!
+     
+      ///``GO TO CONNECTED STATE WITH OBTAINED VSS CONTEXT OBJECT!!!
+      
      player.playerState = Connected<P>(player: player, deviceContext: deviceContext)
     
       
@@ -411,7 +478,7 @@ internal enum NTXPlayerStates {
    { [ weak player, weak mv, weak ai ] _ in
     mv?.isHidden = true
     ai?.startAnimating()
-    player?[.stop]?.tintColor = .white
+    player?[.stop]?.tintColor = .systemOrange
     player?[.stop]?.transform = .init(scaleX: 1.05, y: 1.05)
    }
   }
@@ -425,7 +492,6 @@ internal enum NTXPlayerStates {
    
    debugPrint ("<<< ***** PLAYER CONNECTING STATE ***** >>>")
    
-   
    switch priorState {
      
     case is Stopped<P>            : fallthrough
@@ -435,7 +501,7 @@ internal enum NTXPlayerStates {
     case is Streaming<P>          : refreshed() ; fallthrough
     case is Initial<P>            : requestingVSSContextForLiveStreaming()
      
-     try updateKeepAliveState(to: .init(mode:   .liveVideo, state:  .loading, archive: nil))
+//     try updateKeepAliveState(to: .init(mode:   .liveVideo, state:  .loading, archive: nil))
      
      player.playerStateDelegate?
       .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .loading)
@@ -481,20 +547,13 @@ internal enum NTXPlayerStates {
    
     case is Connecting<P>  :
      
-     try startLiveStreamingFromConnectedVSS()
-     
      fetchDescriptionInfo()
      requestArchiveControls()
      fetchingLivePhotoShot()
      player.playerArchiveImagesCache.prefetch() //prefetch max batch once here
+     fallthrough
      
-    case let state as Failed<P>:
-     switch state.error {
-      case .failedToFetchDescriptionInfo (error: _)         : fetchDescriptionInfo()
-      case .snapshotPreloadFailed        (error: _)         : fetchingLivePhotoShot()
-      case .archiveRequestFailed         (error: _)         : requestArchiveControls()
-      default: break
-     }
+    case is Failed<P>: try startLiveStreamingFromConnectedVSS()
      
     default: break
    }
@@ -506,7 +565,6 @@ internal enum NTXPlayerStates {
   private func startLiveStreamingFromConnectedVSS() throws {
    
    debugPrint(#function)
-   
    
    animateControlsEnabledState(mask: allControlsExcept([.stop, .refresh], state: false))
    
@@ -539,7 +597,7 @@ internal enum NTXPlayerStates {
      case let .success(description):
       DispatchQueue.main.async { [ weak player ] in
        player?.currentVSSDescription = description
-       debugPrint("<+VSS DESCRIPTION DATA RECEIVED SUCCESSFULLY+>: \(String(describing: description))")
+       debugPrint("[+ SUCCESS INFO +] VSS DESCRIPTION DATA RECEIVED SUCCESSFULLY: {\(String(describing: description))}")
        
        
       }
@@ -548,7 +606,7 @@ internal enum NTXPlayerStates {
      case let .failure(error):
       DispatchQueue.main.async { [ weak player ] in
        player?.currentVSSDescription = .empty
-       debugPrint("<<<***** FAILED TO LOAD DESCRIPTION DATA *****>>>: \(error.localizedDescription)")
+       debugPrint("[- ERROR INFO -] FAILED TO LOAD VSS DESCRIPTION DATA: \(error)")
       }
       player.playerStateDelegate?
        .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
@@ -563,8 +621,9 @@ internal enum NTXPlayerStates {
    
    debugPrint(#function)
    
-   guard player.playerPreloadView.image == nil else {
-    debugPrint("Using Exisiting Preload", #function)
+   if let currentImage = player.currentPhotoShot?.uiImage {
+    debugPrint("[ INFO MESSAGE! ] Using Exisiting Preload", #function)
+    player.playerPreloadView.image = currentImage
     return
    }
    
@@ -574,7 +633,7 @@ internal enum NTXPlayerStates {
     
     switch result {
      case let .success(photoShot):
-      debugPrint("<+++++ LIVE PHOTO SHOT DATA RECEIVED SUCCESSFULLY +++++>: \(photoShot)")
+      debugPrint("[+ SUCCESS INFO +] LIVE PHOTO SHOT DATA RECEIVED SUCCESSFULLY: {\(photoShot)}>")
       let pv = player.playerPreloadView
       DispatchQueue.main.async { [ weak player, weak pv ] in
        guard let player = player else { return }
@@ -585,7 +644,7 @@ internal enum NTXPlayerStates {
       
      case let .failure(error):
       
-      debugPrint("<<<***** FAILED TO LOAD LIVE PHOTO SHOT DATA *****>>>: \(error.localizedDescription)")
+      debugPrint("[- ERROR INFO -] FAILED TO LOAD LIVE PHOTO SHOT DATA: {\(error)}")
       
       player.playerStateDelegate?
        .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
@@ -613,20 +672,28 @@ internal enum NTXPlayerStates {
     switch result {
      case let .success(archiveContext):
       
-      debugPrint("<++++ ARCHIVED CONTROLS RECEIVED SUCCESSFULLY ++++>: \(archiveContext)")
+      debugPrint("[+ SUCCESS INFO +] VSS ARCHIVED CONTROLS RECEIVED SUCCESSFULLY: \(archiveContext)")
       
       player.currentVSSArchiveControls = archiveContext
       
-      let depth = ((archiveContext.end ?? 0) - (archiveContext.start ?? 0)) / 1000
+      let begin = TimeInterval( archiveContext.start ?? 0 ) / 1000
+      let end   = TimeInterval( archiveContext.end   ?? 0 ) / 1000
       
-      guard depth > 0 else { break }
+      let depth = (end - begin) / (24 * 60 * 60)
       
-      debugPrint("ARCHIVE DEPTH AVAILABLE (SEC): \(depth)")
+      guard depth > 0 else {
+       debugPrint("[ INFO MESSAGE! ] NO ARCHIVE DEPTH AVAILABLE FOR THIS VSS!")
+       break
+      }
       
+      let SD = Date(timeIntervalSince1970: begin)
+      let ED = Date(timeIntervalSince1970: end)
+      
+      debugPrint("[ INFO MESSAGE! ] ARCHIVE DEPTH AVAILABLE (DAYS): \(depth) FROM DATE: [\(SD)] TO DATE: [\(ED)]")
       
      case let .failure(error):
       
-      debugPrint("<<<***** FAILED TO LOAD ARCHIVE CONTROL INFO *****>>>: \(error.localizedDescription)")
+      debugPrint("[- ERROR INFO -] FAILED TO LOAD VSS ARCHIVE CONTROLS INFO: {\(error)}")
       
       player.playerStateDelegate?
        .playerWillChangeState(deviceID: player.inputVSSSearchResult.id,  to: .error)
@@ -733,7 +800,7 @@ internal enum NTXPlayerStates {
        
        guard let player = player else { return }
        
-       debugPrint("<+++$ SECURITY MARKER RECEIVED SUCCESSFULLY $+++>", #function)
+       debugPrint("[+ SUCCESS INFO +] SECURITY MARKER RECEIVED SUCCESSFULLY: [\(marker)]", #function)
        
        AdmixtureView.createAdmixture(videoRect      : context.videoRect,
                                      attachedTo     : context,
@@ -743,7 +810,7 @@ internal enum NTXPlayerStates {
       }
       
      case let .failure(error):
-      debugPrint("SECURITY MARKER REQUEST ERROR", #function, error.localizedDescription)
+      debugPrint("[- ERROR INFO -] FAILED TO FETCH SECURITY MARKER!", #function, error.localizedDescription)
     }
    }
   }
@@ -783,7 +850,7 @@ internal enum NTXPlayerStates {
       player.playerStateDelegate?
        .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .playing)
       
-      debugPrint ("<<<+++++ SUCCESS!!! PLAYER CONTEXT IS READY TO STREAM +++++>>> ")
+      debugPrint ("[+ SUCCESS INFO +] PLAYER CONTEXT IS READY TO STREAM VIDEO FROM VSS!")
       
       player.showAlert(alert: .info(message: "Успешное подключение к выбранной СВН в режиме живого вещания! "))
       
@@ -820,15 +887,16 @@ internal enum NTXPlayerStates {
        
        
        
-       do {
-         ///TRY TO SET KEEP ALIVE STATE NOW **PLAYING** FROM LIVE STREAMING ASSET...
-        
-        try updateKeepAliveState(to: .init(mode: .unchanged, state: .playing, archive: nil))
-       } catch {
-        player.playerState = Failed<P>(player: player,
-                                       error: .keepAliveStateUpdateFailed(error: error))
-       }
-       
+//       do {
+//         ///TRY TO SET KEEP ALIVE STATE NOW **PLAYING** FROM LIVE STREAMING ASSET...
+//
+//      try updateKeepAliveState(to: .init(mode: .unchanged, state: .playing, archive: nil))
+//
+//       } catch {
+//        player.playerState = Failed<P>(player: player,
+//                                       error: .keepAliveStateUpdateFailed(error: error))
+//       }
+//
        player.playerStateDelegate?
         .playerDidChangeState(deviceID: player.inputVSSSearchResult.id, to: .playing)
        
@@ -849,7 +917,7 @@ internal enum NTXPlayerStates {
       
      case .failure(let error):
       
-      debugPrint ("<-- FAILURE!!! PLAYER CONTEXT IS NOT READY! -->")
+      debugPrint ("[- FAILURE INFO -] PLAYER CONTEXT IS NOT READY TO STREAM FROM VSS!")
       
       player.playerStateDelegate?
        .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
@@ -975,8 +1043,9 @@ internal enum NTXPlayerStates {
   private func requestLiveVideoShot(_ player: P, _ deviceContext: P.Manager.Device, _ completion: (() -> ())? = nil) {
    
    debugPrint(#function)
+   
    let now = Date()
-   var request: AbstractRequest?
+   var request: URLSessionRequestRepresentable?
    request = player.connectionsManager.requestVSSPhotoShot(for: deviceContext){ [ weak request, weak player ] result in
     
     guard let player = player else { return }
@@ -991,7 +1060,7 @@ internal enum NTXPlayerStates {
     switch result {
       
      case let .success(photoShot):
-      debugPrint("LIVE VIDEO MODE PHOTO SHOT DATA AT: [\(now)] RECEIVED SUCCESSFULLY: \(photoShot)")
+      debugPrint("[+ SUCCESS INFO +] LIVE VIDEO MODE PHOTOSHOT DATA AT: [\(now)] RECEIVED SUCCESSFULLY: \(photoShot)")
       
       let pv = player.playerPreloadView
       DispatchQueue.main.async { [ weak player, weak pv ] in
@@ -1038,7 +1107,7 @@ internal enum NTXPlayerStates {
  
    let fireIn = max(viewModeInterval - delay, viewModeInterval * 0.01)
    
-   debugPrint(#function, "next request in: ", String(format:"%.3f", fireIn))
+   debugPrint("[ INFO ] POLL LIVE", #function, "next request in: ", String(format:"%.3f", fireIn))
    
    player.viewModeTimer = Timer.scheduledTimer(withTimeInterval: fireIn, repeats: false){ [ weak player ] _ in
     guard let player = player else { return }
@@ -1081,17 +1150,12 @@ internal enum NTXPlayerStates {
    animateControlsEnabledState(mask: [.viewMode: false ])
    
    guard let deviceContext = player.currentVSS else {
-    debugPrint("<VIEW MODE ERROR> NO CURRENT VSS!!!", #function)
+    debugPrint("[- ERROR INFO -] FAILED TO GET CURRENT PLAYER VSS OBJECT IN: ", #function)
     return
    }
    
-   player.showAlert(alert: .warning(message: "Возобновление покадрового режима живой трансляции с текущей СВН!"))
+   player.showAlert(alert: .warning(message: "Возобновление покадрового авторежима живой трансляции с текущей СВН !"))
    
-   guard player.viewModePolling else {
-    player.viewModePolling = true
-    showViewModeSnapshot(player, deviceContext)
-    return
-   }
    
    startLivePolling(player, deviceContext)
    
@@ -1121,24 +1185,51 @@ internal enum NTXPlayerStates {
    
   }
   
-  private func startViewMode(){
+  private func startManualViewMode() {
+   
+   debugPrint(#function)
+   
+   animateControlsEnabledState(mask: [.viewMode: false ])
+   
+   guard let deviceContext = player.currentVSS else {
+    debugPrint("[- ERROR INFO -] FAILED TO GET CURRENT PLAYER VSS OBJECT")
+    return
+   }
+   
+   player.showAlert(alert: .warning(message: "Трансляция с текущей СВН переводится в покадровый ручной режим!"))
+   
+   showViewModeSnapshot(player, deviceContext)
+   
+  }
+  
+  private func nextViewModeSnapshot() {
+   
+   debugPrint(#function)
+   
+   animateControlsEnabledState(mask: [.viewMode: false ])
+   
+   guard let deviceContext = player.currentVSS else {
+    debugPrint("[- ERROR INFO -] FAILED TO GET CURRENT PLAYER VSS OBJECT")
+    return
+   }
+ 
+   showViewModeSnapshot(player, deviceContext)
+   
+  }
+  
+  
+  private func startPollingViewMode(){
   
    debugPrint(#function)
    
    animateControlsEnabledState(mask: [.viewMode: false ])
    
    guard let deviceContext = player.currentVSS else {
-    debugPrint("<VIEW MODE ERROR> NO CURRENT VSS!!!", #function)
+    debugPrint("[- ERROR INFO -] FAILED TO GET CURRENT PLAYER VSS OBJECT")
     return
    }
    
-   player.showAlert(alert: .warning(message: "Трансляция с текущей СВН переводится в покадровый режим!"))
-   
-   guard player.viewModePolling else {
-    player.viewModePolling = true
-    showViewModeSnapshot(player, deviceContext)
-    return
-   }
+   player.showAlert(alert: .warning(message: "Трансляция с текущей СВН переводится в покадровый авторежим!"))
    
    let ai = player.playerActivityIndicator
    let pc = player.playerContext
@@ -1169,10 +1260,10 @@ internal enum NTXPlayerStates {
    animateControlsEnabledState(mask: [.viewMode: true  ])
   }
   
-  func restartViewMode() {
+  func restartPollingViewMode() {
    debugPrint(#function)
    stopViewMode()
-   startViewMode()
+   startPollingViewMode()
   }
   
   internal func handle(priorState: (any NTXPlayerState)?) throws {
@@ -1181,17 +1272,21 @@ internal enum NTXPlayerStates {
    
    switch priorState {
      
-    case let state as Self where !state.viewMode &&  viewMode : startViewMode()  //toggle VM
+    case let state as Self where !state.viewMode && viewMode:
+     
+     if player.viewModePolling { startPollingViewMode() } else { startManualViewMode() }
+    
     case let state as Self where !state.viewMode && !viewMode : pauseStreaming() //play pressed when playing no VM
-    case let state as Self where  state.viewMode &&  viewMode :                  //play pressed when playing in VM
+     
+    case let state as Self where  state.viewMode && viewMode :   //play pressed when playing in VM
      
     ///`check if viewMode interval changed while streaming & restart viewMode with new interval set by player!
-     if state.viewModeInterval !=  viewModeInterval {
-      state.restartViewMode()
+     if state.viewModeInterval !=  viewModeInterval && player.viewModePolling {
+      state.restartPollingViewMode()
       break
      }
      
-     fallthrough
+     if player.viewModePolling { fallthrough } else { nextViewModeSnapshot() }
      
     case let state as Self where  state.viewMode && !viewMode : state.stopViewMode() //toggle VM & resume live...
                                                                 startLiveStreaming()
@@ -1202,14 +1297,16 @@ internal enum NTXPlayerStates {
     case let state as Paused<P> where  state.viewMode &&  viewMode : resumeViewModeAfterPause()
      
     case let state as PlayingArchive<P> where  state.viewMode &&  viewMode  : state.stopViewMode()
-                                                                              startViewMode()
+     if player.viewModePolling { startPollingViewMode() } else { startManualViewMode() }
                                                                               
      
     case let state as PlayingArchive<P> where  state.viewMode && !viewMode  : state.stopViewMode()
                                                                               startLiveStreaming()
                                                                               
                                                                               
-    case let state as PlayingArchive<P> where !state.viewMode &&  viewMode  : startViewMode()
+    case let state as PlayingArchive<P> where !state.viewMode &&  viewMode  :
+     if player.viewModePolling { startPollingViewMode() } else { startManualViewMode() }
+     
     case let state as PlayingArchive<P> where !state.viewMode && !viewMode  : startLiveStreaming()
      
     case is Connected<P> : startLiveStreaming()
@@ -1221,7 +1318,7 @@ internal enum NTXPlayerStates {
      
      ///#KEEP ALIVE **SUSPENDED** UNTIL PLAYER IS READY TO PLAY FROM LIVE STREAMING ASSET...
     
-     try updateKeepAliveState(to: .init(mode: .unchanged, state: .suspended,  archive: nil))
+//     try updateKeepAliveState(to: .init(mode: .unchanged, state: .suspended,  archive: nil))
      
     case let failure as Failed<P> :
      switch failure.error {
@@ -1338,7 +1435,7 @@ internal enum NTXPlayerStates {
    
       ///KEEP ALIVE **PAUSED** UNTIL PLAYER IS READY TO PLAY FROM LIVE STREAMING ASSET...
      
-     try updateKeepAliveState(to: .init(mode: .unchanged, state: .paused, archive: nil))
+//     try updateKeepAliveState(to: .init(mode: .unchanged, state: .paused, archive: nil))
      
      
      
@@ -1380,16 +1477,18 @@ internal enum NTXPlayerStates {
     player.currentState = .stopped
     
    }
-   do { ///TRY TO SET KEEP ALIVE STATE NOW **STOPPED**
-    try updateKeepAliveState(to: .init(mode: .unchanged,  state: .suspended, archive: nil))
-   } catch {
-    
-    player.playerStateDelegate?
-     .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
-    
-    player.playerState = Failed<P>(player: player,
-                                   error: .keepAliveStateUpdateFailed(error: error))
-   }
+   
+//   do { ///TRY TO SET KEEP ALIVE STATE NOW **STOPPED**
+//    try updateKeepAliveState(to: .init(mode: .unchanged,  state: .suspended, archive: nil))
+//   } catch {
+//
+//    player.playerStateDelegate?
+//     .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
+//
+//    player.playerState = Failed<P>(player: player,
+//                                   error: .keepAliveStateUpdateFailed(error: error))
+//   }
+   
   }
   
   
@@ -1421,16 +1520,16 @@ internal enum NTXPlayerStates {
      
     }
     
-    do { ///TRY TO SET KEEP ALIVE STATE NOW **STOPPED**
-     try updateKeepAliveState(to: .init(mode: .unchanged, state: .suspended, archive: nil))
-    } catch {
-     
-     player.playerStateDelegate?
-      .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
-     
-     player.playerState = Failed<P>(player: player,
-                                    error: .keepAliveStateUpdateFailed(error: error))
-    }
+//    do { ///TRY TO SET KEEP ALIVE STATE NOW **STOPPED**
+//     try updateKeepAliveState(to: .init(mode: .unchanged, state: .suspended, archive: nil))
+//    } catch {
+//
+//     player.playerStateDelegate?
+//      .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
+//
+//     player.playerState = Failed<P>(player: player,
+//                                    error: .keepAliveStateUpdateFailed(error: error))
+//    }
     
    }
    
@@ -1482,6 +1581,7 @@ internal enum NTXPlayerStates {
    
    debugPrint ("<<< ***** PLAYER STOPPED STATE ***** >>>")
    
+   player.viewModeArchiveCurrentTimePoint = nil
    
    switch priorState {
      
@@ -1558,22 +1658,26 @@ internal enum NTXPlayerStates {
    
    player.playerContext.pause()
    
+   let ai = player.playerActivityIndicator
+   ai.startAnimating()
+   
    player.playerContext.startPlayback(from: streamURL,
                                       useLiveStreamingWhilePaused: true,
-                                      retryCount: .max) { [ weak player ] result in
+                                      retryCount: .max) { [ weak ai, weak player ] result in
     
     guard let player = player else { return }
     
     switch result {
      case .success(_ ):
       
-      debugPrint ("<<< SUCCESS! READY TO PLAY ARCHIVE RECORD! >>>")
+      debugPrint ("<<< [+ SUCCESS INFO +] - READY TO PLAY ARCHIVE RECORD! >>>")
       
       player.showAlert(alert: .info(message: "Архивная запись успешно загружена!"))
       
       startFinishedPlayingObservation()
       
-      let ai = player.playerActivityIndicator
+      
+     
       UIView.transition(from:     player.playerPreloadView,
                         to:       player.playerContext,
                         duration: player.transitionDurationOfContexts,
@@ -1605,23 +1709,23 @@ internal enum NTXPlayerStates {
        
        
        
-       do {
-         ///TRY TO SET KEEP ALIVE STATE NOW **PLAYING ARCHIVE ** FROM ARCHIVE ASSET...
-        try updateKeepAliveState(to: .init(mode: .archiveVideo, state: .playing, archive: nil))
-       } catch {
-        
-        player.playerStateDelegate?
-         .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
-        
-        player.playerState = Failed<P>(player: player,
-                                       error: .keepAliveStateUpdateFailed(error: error))
-       }
+//       do {
+//         ///TRY TO SET KEEP ALIVE STATE NOW **PLAYING ARCHIVE ** FROM ARCHIVE ASSET...
+//        try updateKeepAliveState(to: .init(mode: .archiveVideo, state: .playing, archive: nil))
+//       } catch {
+//
+//        player.playerStateDelegate?
+//         .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
+//
+//        player.playerState = Failed<P>(player: player,
+//                                       error: .keepAliveStateUpdateFailed(error: error))
+//       }
        
       }
       
      case .failure(let error):
       
-      debugPrint ("FAILURE!!! PLAYER CONTEXT IS NOT READY TO PLAY ARCHIVE RECORD!")
+      debugPrint ("[- ERROR INFO -] PLAYER CONTEXT IS NOT READY TO PLAY ARCHIVE RECORD!")
       
       player.playerStateDelegate?
        .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .error)
@@ -1649,10 +1753,57 @@ internal enum NTXPlayerStates {
    player.playerState = Streaming<P>(player            : player,
                                      streamURL         : liveURL,
                                      tryRestartCount   : NTXPlayerStates.maxVSSStreamingRequests,
-                                     archiveDepth      : 0, //no retry state here
+                                     archiveDepth      : 0,
                                      viewMode          : viewMode,
                                      viewModeInterval  : viewModeInterval)
    
+  }
+  
+  private func playArchiveRecord(at depthSeconds: Int) {
+   debugPrint(#function, depthSeconds)
+   
+   animateControlsEnabledState(mask: [.viewMode: false ])
+   
+   guard depthSeconds <= 0 else {
+    player.timeLine.setStartPosition(0)
+    player.playerMutedStateView.isHidden = true
+    resumeLiveStreaming()
+    return
+   }
+   
+   guard let archiveContext = player.currentVSSArchiveControls else { return }
+   guard let archiveURLString = player.currentVSS?.getArchiveIosUrls()?.first else { return }
+   
+   let startSec = (archiveContext.start ?? 0) / 1000
+   let endSec   = (archiveContext.end   ?? 0) / 1000
+   
+   let timePoint = endSec + depthSeconds
+   
+   guard timePoint >= startSec else { return }
+  
+   player.playerMutedStateView.isHidden = true
+   player.playerContext.isHidden = true
+   player.playerPreloadView.isHidden = false
+   
+   player.playerArchiveImagesCache.image(with: timePoint) { image in
+    guard let image = image else { return }
+    player.playerPreloadView.image = image
+   }
+   
+   guard let depthURL = URL(string: "\(archiveURLString)&ts=\(timePoint)") else { return }
+   
+   player.showAlert(alert: .warning(message:
+                                        """
+                                         Воспроизведение записи архива
+                                         видеонаблюдения с глубиной: (\(depthSeconds)) сек. назад!
+                                        """))
+   
+  
+
+   startArchiveStreaming(from: depthURL)
+     
+    
+ 
   }
   
   private func moveArchiveRecord(from prevDepth: Int , to depthSeconds: Int){
@@ -1661,8 +1812,7 @@ internal enum NTXPlayerStates {
    
    animateControlsEnabledState(mask: [.viewMode: false ])
    
-   guard depthSeconds < 0 else {
-    player.timeLine.isHidden = true
+   guard depthSeconds <= 0 else {
     player.timeLine.setStartPosition(0)
     player.playerMutedStateView.isHidden = true
     resumeLiveStreaming()
@@ -1679,23 +1829,27 @@ internal enum NTXPlayerStates {
    
    guard timePoint >= startSec else { return }
    
-   print("ARCHIVE DEPTH SEC: Start - \(startSec) |===>| End - \(endSec) ")
+   //print("ARCHIVE DEPTH SEC: Start - \(startSec) |===>| End - \(endSec) ")
    
    let action: NTXPlayerActions = prevDepth > depthSeconds ? .playArchiveBack : .playArchiveForward
    
    player.playerMutedStateView.isHidden = true
    player.playerContext.isHidden = true
    player.playerPreloadView.isHidden = false
-   player.timeLine.isHidden = false
-   player.timeLine.setTime(depthSeconds)
+   
+   if !viewMode { player.timeLine.setTime(depthSeconds) }
   
    player.playerArchiveImagesCache.image(with: timePoint) { image in
+    guard let image = image else { return }
     player.playerPreloadView.image = image
    }
    
-   
    ///``DEBOUNCE ACTION...
-   player.setDebounceTimer(for: action){ _ in
+   
+   let tl = player.timeLine
+   
+   player.setDebounceTimer(for: action){ [ weak tl ] _ in
+    
     guard let depthURL = URL(string: "\(archiveURLString)&ts=\(timePoint)") else { return }
     
     player.showAlert(alert: .warning(message:
@@ -1704,15 +1858,16 @@ internal enum NTXPlayerStates {
          видеонаблюдения \(viewMode ? "в покадровом режиме" : "") с глубиной: (\(depthSeconds)) сек. назад!
         """))
     
-    player.timeLine.isHidden = true
-    player.timeLine.setStartPosition(depthSeconds)
-    player.playerActivityIndicator.startAnimating()
-    
-    if viewMode {
-     startViewMode(at: timePoint, to: endSec)
-    } else {
-     startArchiveStreaming(from: depthURL)
+    tl?.stopAnimating{
+     if viewMode {
+      startPollingViewMode(at: timePoint, to: endSec)
+     } else {
+      startArchiveStreaming(from: depthURL)
+     }
     }
+    
+    
+   
     
    }
    
@@ -1723,14 +1878,14 @@ internal enum NTXPlayerStates {
   private let viewModeQueue = DispatchQueue(label: "Player.PlayingArchiveState.Queue")
   
   
-  
   private func pollArchive (_ player: P, _ timePoint: Int, delay: TimeInterval, _ endTimePoint: Int ) {
    
    let fireIn = max(viewModeInterval - delay, viewModeInterval * 0.01)
    
-   debugPrint(#function, "at: \(timePoint) with delay: \(String(format:"%.3f", fireIn))")
+   debugPrint("[ INFO ] POLL ARCHIVE", #function, "at: \(timePoint) with delay: \(String(format:"%.3f", fireIn))")
    
    guard timePoint <= endTimePoint else {
+    debugPrint("[ INFO ] POLL ARCHIVE STOPPED!", #function)
     stopViewMode()
     resumeLiveStreaming()
     return
@@ -1746,16 +1901,13 @@ internal enum NTXPlayerStates {
      guard let player = player else { return }
      viewModeDispatcher.wait()
      let pv = player.playerPreloadView
-     let ai = player.playerActivityIndicator
      let requestedTime = Date().timeIntervalSince1970
-     player.playerArchiveImagesCache.image(with: timePoint) { [ weak pv, weak player, weak ai ] image in
+     player.playerArchiveImagesCache.image(with: timePoint) { [ weak pv, weak player ] image in
       defer { viewModeDispatcher.signal() }
       guard let player = player else { return }
       let currentDelay = Date().timeIntervalSince1970 - requestedTime
-      if let image = image {
-       pv?.image = image
-       if ai?.isAnimating ?? false { ai?.stopAnimating() }
-      }
+      if let image = image { pv?.image = image }
+ 
       pollArchive(player, timePoint + Int(viewModeInterval), delay: (delay + currentDelay) / 2 , endTimePoint)
       
      }
@@ -1770,16 +1922,15 @@ internal enum NTXPlayerStates {
    let requestedTime = Date().timeIntervalSince1970
    let pv = player.playerPreloadView
    let ai = player.playerActivityIndicator
+   ai.startAnimating()
    player.playerArchiveImagesCache.image(with: timePoint) { [ weak player, weak pv, weak ai ] image in
     guard let player = player else { return }
+    
     let delay = Date().timeIntervalSince1970 - requestedTime
     
-    if let image = image {
-     pv?.image = image
-     ai?.stopAnimating()
-    }
+    if let image = image { pv?.image = image }
     
-    animateControlsEnabledState(mask: [.viewMode: true ])
+    animateControlsEnabledState(mask: [.viewMode: true ]) { [ weak ai ] in ai?.stopAnimating() }
     
     pollArchive(player, timePoint + Int(viewModeInterval), delay: delay, endTimePoint)
    }
@@ -1789,24 +1940,30 @@ internal enum NTXPlayerStates {
    
    debugPrint(#function, timePoint)
    
+   let ai = player.playerActivityIndicator
+   
    guard timePoint <= endTimePoint else {
+    ai.stopAnimating()
     stopViewMode()
     resumeLiveStreaming()
     return
    }
    
    let pv = player.playerPreloadView
-   player.playerArchiveImagesCache.image(with: timePoint) { [ weak pv ] image in pv?.image = image }
    
-   animateControlsEnabledState(mask: [.viewMode: true ])
+   player.playerArchiveImagesCache.image(with: timePoint) { [ weak pv, weak ai ] image in
+    if let image = image { pv?.image = image }
+    animateControlsEnabledState(mask: [.viewMode: true ]) { [ weak ai ] in ai?.stopAnimating() }
+   }
+   
+   
   }
   
-  private func startViewMode(at timePoint: Int, to endTimePoint: Int) {
+  private func startPollingViewMode(at timePoint: Int, to endTimePoint: Int) {
    
    debugPrint(#function, timePoint)
    
    guard player.viewModePolling else {
-    player.viewModePolling = true
     fetchArchiveImage(at: timePoint, to: endTimePoint)
     return
    }
@@ -1846,7 +2003,14 @@ internal enum NTXPlayerStates {
      moveArchiveRecord(from: state.archiveDepth, to: depthSeconds)
      
     case let state as PlayingArchive<P> :
-     if state.viewMode { state.stopViewMode() }
+     if state.viewMode {
+      state.stopViewMode()
+      if !viewMode {
+       playArchiveRecord(at: state.depthSeconds)
+       break
+      }
+     }
+     
      moveArchiveRecord(from: state.depthSeconds, to: depthSeconds)
      
     default: break
@@ -1890,6 +2054,14 @@ internal enum NTXPlayerStates {
    player.showAlert(alert: .error(message: message))
   }
   
+  private var VSSID: P.Delegate.Device.VSSIDType { player.inputVSSSearchResult.id }
+  
+  private var connectionURL            : URL? { player.deviceConnectionRequest?.requestURL }
+  private var archiveControlsURL       : URL? { player.archiveControlsRequest?.requestURL }
+  private var livePhotoShotURL         : URL? { player.livePhotoShotRequest?.requestURL }
+  private var securityMarkerURL        : URL? { player.securityMarkerRequest?.requestURL }
+  private var descriptionInfoURL       : URL? { player.descriptionInfoRequest?.requestURL }
+  
   internal func handle( priorState: (any NTXPlayerState)? ) throws {
    
    debugPrint ("<<< ***** PLAYER FAILED STATE ***** >>>")
@@ -1903,16 +2075,28 @@ internal enum NTXPlayerStates {
      
     case ( is Connecting<P>, .VSSConnectionRetryCountEcxeeded ):
      
+     debugPrint("""
+                <<< ********************* PORTAL CONNECTION ERROR ******************* >>>
+                Не возможно подключиться к СВН ID [\(VSSID)]. Ошибка сервера!
+                Кол-во попыток подключения исчерпано! Плеер по данной СВН будет остановлен!
+                REQUEST URL:  [\(connectionURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                <<< ***************************************************************** >>>
+                """)
+     
      alert("""
-           Не возможно подключиться к данной СВН. Ошибка сервера!
+           Не возможно подключиться к СВН ID [\(VSSID)]. Ошибка сервера!
            Кол-во попыток подключения исчерпано!
+           Плеер по данной СВН будет остановлен!
            """)
      
-     player.playerStateDelegate?  ///``PlayerDelegate.playerFailedToAuth(1)``
+     
+     
+     player.playerStateDelegate?  ///``PlayerDelegate.didFailToConnect(1)``
       .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
                                 with: .playerFailedToConnect(error: error,
-                                                             deviceID: player.inputVSSSearchResult.id,
-                                                             url: player.deviceConnectionRequest?.requestURL))
+                                                             deviceID: VSSID,
+                                                             url: connectionURL))
      
      player.playerStateDelegate?
       .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .stopped)
@@ -1921,15 +2105,24 @@ internal enum NTXPlayerStates {
      
     case  ( is Connecting<P>, let .unauthorized(code: code) ) :
      
-     debugPrint("*** VSS Connection Failed! *** UNAUTHORIZED PLAYER CLIENT: <\(code)> ")
+     debugPrint("""
+                <<< ********************* PORTAL AUTHORIZATION ERROR ******************** >>>
+                Ошибка авторизации на портале для вещания с СВН ID [\(VSSID)]!
+                Клиент не авторизован для вещания на портале! Статус код - \(code)!
+                REQUEST URL: [\(connectionURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)]
+                <<< ********************************************************************* >>>
+                """)
      
-     alert("Ошибка авторизации! Клиент не авторизован для вещания СВН на портале! Статус - \(code)!")
+     alert("""
+           Ошибка авторизации СВН ID [\(VSSID)]!
+           Клиент не авторизован на портале вещания!
+           Статус код ошибки сети - \(code)!
+           """)
      
      player.playerStateDelegate?  ///``PlayerDelegate.playerFailedToAuth(2)``
       .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
-                                with: .playerFailedToAuth(error: error,
-                                                          deviceID: player.inputVSSSearchResult.id,
-                                                          url: player.deviceConnectionRequest?.requestURL))
+                                with: .playerFailedToAuth(error: error, deviceID: VSSID, url: connectionURL))
      
      player.playerStateDelegate?
       .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .stopped)
@@ -1937,80 +2130,152 @@ internal enum NTXPlayerStates {
      player.playerState = Stopped(player: player)
      
     case let ( state as Connecting<P>, .VSSConnectionFailed(error: error) ):
-     debugPrint("VSS Connection Failed: <\(error.localizedDescription)> ")
+     debugPrint("""
+                <<< *************** VSS (CAMERA) CONNECTION FAILED ****************** >>>
+                Ошибка первичного подключения к СВН ID [\(VSSID)]!
+                Запрос будет повторен! Кол-во попыток ограничено - [\(state.tryCount)]!!!
+                REQUEST URL: [\(connectionURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                <<< ***************************************************************** >>>
+                """)
      
       ///``RETRY CONNECT VSS AFTER CONNECTON ERROR!
+      
+     alert("""
+           Ошибка первичного подключения к СВН ID [\(VSSID)]!
+           Запрос будет повторен! Кол-во попыток ограничено - [\(state.tryCount)]!
+           """)
+     
      player.playerState = Connecting(player: player, tryCount: state.tryCount - 1)
      
     case (_ , .noStreamingURL):
      
-     debugPrint("NO VSS CDN URL in received JSON data after parsing: <\(error.localizedDescription)>")
+     debugPrint("""
+                <<< *********** NO CAMERA CDN URL FOUND IN RECEIVED SERVER DATA ******* >>>
+                Контент ресурс для подключения вещания СВН ID [\(VSSID)] отсутсвует на сервере!
+                JSON объект не содежит требуемого поля для получения CDN URL вещания СВН!
+                REQUEST URL: [\(connectionURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                <<< ******************************************************************** >>>
+                """)
      
-     alert("Контент ресурс для подключения вещания данной СВН отсутсвует на сервере!")
+     alert("Контент ресурс для подключения вещания СВН ID [\(VSSID)] отсутсвует на сервере!")
      
-     player.playerStateDelegate? ///``PlayerDelegate.playerFailedToGetInfo(3)``
+     player.playerStateDelegate? /// ``PlayerDelegate.playerFailedToGetInfo(3)``
       .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
-                                with: .playerFailedToGetInfo(error: error,
-                                                             deviceID: player.inputVSSSearchResult.id,
-                                                             url: player.deviceConnectionRequest?.requestURL))
+                                with: .playerFailedToGetInfo(error: error, deviceID: VSSID, url: connectionURL))
      
      player.playerStateDelegate?
       .playerWillChangeState(deviceID: player.inputVSSSearchResult.id, to: .stopped)
      
      player.playerState = Stopped(player: player)
      
-     
-     
+    
     ///``VSS Live Snapshot Preload Failed...
-    ///
+    
     case let (priorState as Streaming<P>, .snapshotPreloadFailed(error: error)) :
      
-     debugPrint("VSS STREAMING - Live Snapshot Preload Failed: <\(error.localizedDescription)>")
+     debugPrint("""
+                <<< ************* VSS STREAMING - Live Snapshot Preload Failed ********** >>>
+                Не удалось загрузить предварительный снимок СВН ID [\(VSSID)]!
+                Подключение для дальнешего вещания с данной СВН будет продолжено!
+                REQUEST URL: [\(livePhotoShotURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                <<< ********************************************************************* >>>
+                """)
      
      alert("""
-           Не удалось загрузить предварительный снимок с данной СВН во время подключения!
+           Не удалось загрузить предварительный снимок с данной СВН ID [\(VSSID)] во время подключения!
            Подключение для дальнешего вещания с данной СВН будет продолжено!
            """)
+     
+     player.playerStateDelegate? /// ``PlayerDelegate.playerFailedToGetInfo(3)``
+      .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
+                                with: .playerFailedToGetInfo(error: error, deviceID: VSSID, url: livePhotoShotURL))
      
      player.playerState = priorState ///``Go back to the same state after alerting...
                                      ///
     case let (priorState as Connecting<P>, .snapshotPreloadFailed(error: error)) :
      
-     debugPrint("VSS CONNECTED - Live Snapshot Preload Failed: <\(error.localizedDescription)>")
+     debugPrint("""
+                <<< *********** VSS CONNECTED - Live Snapshot Preload Failed ************ >>>
+                Не удалось загрузить предварительный снимок СВН ID [\(VSSID)]!
+                Подключение для дальнешего вещания с данной СВН будет продолжено!
+                REQUEST URL: [\(livePhotoShotURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                <<< ********************************************************************* >>>
+                """)
      
      alert("""
-           Не удалось загрузить предварительный снимок с данной СВН во время подключения!
+           Не удалось загрузить предварительный снимок с данной СВН ID [\(VSSID)] во время подключения!
            Подключение для дальнешего вещания с данной СВН будет продолжено!
            """)
      
+     player.playerStateDelegate? /// ``PlayerDelegate.playerFailedToGetInfo(3)``
+      .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
+                                with: .playerFailedToGetInfo(error: error, deviceID: VSSID, url: livePhotoShotURL))
+     
      player.playerState = priorState ///``Go back to the same state after alerting...
+                                     
     
     case let (priorState as Connected<P>, .failedToFetchDescriptionInfo(error: error)) :
      
-     debugPrint("VSS CONNECTING - VSS Fetch Description Failed: <\(error.localizedDescription)>")
+     debugPrint("""
+                <<< *********** CONNECTED STATE ERROR - VSS Fetch Description Failed ************ >>>
+                Не удалось загрузить информацию о технических возможностях СВН ID [\(VSSID)]!
+                Подключение для дальнешего вещания будет продолжено c ограничениями!
+                REQUEST URL: [\(descriptionInfoURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                <<< ***************************************************************************** >>>
+                """)
      
      alert("""
-           Не удалось загрузить информацию о технических возможностях СВН!
-           Подключение для дальнешего вещания с данной СВН будет продолжено!
+           Не удалось загрузить информацию о технических возможностях СВН ID [\(VSSID)]!
+           Подключение для дальнешего вещания с данной СВН будет продолжено c ограничениями!
            """)
+     
+     player.playerStateDelegate? /// ``PlayerDelegate.playerFailedToGetInfo(3)``
+      .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
+                                with: .playerFailedToGetInfo(error: error, deviceID: VSSID, url: descriptionInfoURL))
      
      player.playerState = priorState ///``Go back to the same state after alerting...
                                      
     case let (priorState as Streaming<P>, .failedToFetchDescriptionInfo(error: error)) :
      
-     debugPrint("VSS STREAMING - VSS Fetch Description Failed: <\(error.localizedDescription)>")
+     debugPrint("""
+                <<< ************ STREAMING STATE ERROR - VSS Fetch Description Failed *********** >>>
+                Не удалось загрузить информацию о технических возможностях СВН ID [\(VSSID)]!
+                Подключение для дальнешего вещания будет продолжено c ограничениями!
+                REQUEST URL: [\(descriptionInfoURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                <<< ***************************************************************************** >>>
+                """)
      
      alert("""
-           Не удалось загрузить информацию о технических возможностях СВН!
+           Не удалось загрузить информацию о технических возможностях СВН ID [\(VSSID)]!
            Подключение для дальнешего вещания с данной СВН будет продолжено!
            """)
+     
+     player.playerStateDelegate? /// ``PlayerDelegate.playerFailedToGetInfo(3)``
+      .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
+                                with: .playerFailedToGetInfo(error: error,
+                                                             deviceID: VSSID, url: descriptionInfoURL))
      
      player.playerState = priorState ///``Go back to the same state after alerting...
      
      ///``VSS Video Mode Snapshot Load Failed...``
+     
     case let (priorState as Streaming<P>, .liveviewModeLoadFailed(error: error, date: date)):
      
-     debugPrint("VSS Video Mode Snapshot Load Failed at <\(date)>: <\(error.localizedDescription)>")
+     debugPrint("""
+                <<< ******* STREAMING STATE ERROR - VSS Video Mode Snapshot Load Failed ********* >>>:
+                Не удалось загрузить текущий снимок СВН ID [\(VSSID)]
+                в момент запроса - [\(date)] во время живого просмотра кадрами!
+                Загрузка снимка отменена последней операцией плеера!
+                REQUEST URL: [\(player.currentPhotoShotURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                <<< ***************************************************************************** >>>
+                """)
      
      guard priorState.viewMode else {
       
@@ -2028,7 +2293,7 @@ internal enum NTXPlayerStates {
      player.playerStateDelegate? ///``PlayerDelegate.playerFailedToPlay(4)``
       .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
                                 with: .playerFailedToPlay(error: error,
-                                                          deviceID: player.inputVSSSearchResult.id,
+                                                          deviceID: VSSID,
                                                           url: player.currentPhotoShotURL))
      
      player.playerState = priorState ///``Go back to the same state after alerting...``
@@ -2036,7 +2301,13 @@ internal enum NTXPlayerStates {
      
     case let (priorState as PlayingArchive<P>, .liveviewModeLoadFailed(error: error, date: date)):
      
-     debugPrint("VSS ARCHIVE - Live Fetch Snapshot Image Error: <\(error.localizedDescription)>")
+     debugPrint("""
+                [- ARCHIVE STATE ERROR -] LIVE MODE Fetch Snapshot Image Error:
+                Не удалось загрузить снимок СВН ID [\(VSSID)] за \(date) во время живой трансляции!
+                Загрузка снимка отменена последней операцией плеера!
+                REQUEST URL: [\(player.currentPhotoShotURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                """)
      
      alert("""
            Не удалось загрузить снимок за \(date) во время живой трансляции!
@@ -2047,22 +2318,21 @@ internal enum NTXPlayerStates {
      
      
     case let (priorState as PlayingArchive<P>, .archiveShotsPrefetchFailed(error: error, depth: depth, url: url)):
-     
-     debugPrint("VSS ARCHIVE - VIEW Mode Snapshot Fetch Failed at <\(depth)>: <\(error.localizedDescription)>")
-     
+   
      guard priorState.viewMode else {
-      
-      alert("""
-           Не удалось загрузить снимок во время просмотра архивного видео кадрами!
-           Загрузка снимка отменена последней операцией плеера!
-           """)
-      
       player.playerState = priorState ///``Go back to the same state without alerting...``
-                                     
+                                  
       break
      }
      
-     alert("Не удалось загрузить текущий снимок с данной СВН в режиме архивного просмотра кадрами!")
+     debugPrint("""
+                [- ARCHIVE STATE ERROR -] VIEW MODE Snapshot Fetch Failed at <\(depth)>:
+                Не удалось загрузить текущий снимок СВН ID [\(VSSID)] в режиме архивного просмотра кадрами!
+                REQUEST URL: [\(player.currentPhotoShotURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                """)
+     
+     alert("Не удалось загрузить текущий снимок СВН ID [\(VSSID)]в режиме архивного просмотра кадрами!")
      
      player.playerStateDelegate? ///``PlayerDelegate.playerFailedToPlay(4)``
       .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
@@ -2075,7 +2345,13 @@ internal enum NTXPlayerStates {
                           
     case let (priorState as Connected<P>, .archiveShotsPrefetchFailed(error: error, depth: depth, url: url)):
      
-     debugPrint("VSS CONNECTED - Prefetch Image Error: <\(error.localizedDescription)> from URL: \(url as Any)")
+     debugPrint("""
+                [- CONNECTED STATE ERROR -] Prefetch Image Error:
+                Не удалось загрузить архивный снимок с глубиной: [\(depth)]
+                во время подключения вещания с данной СВН!
+                Подключение вещания данной СВН будет продолжено!
+                <\(error)> from URL: \(url as Any)
+                """)
      
      alert("""
            Не удалось загрузить архивный снимок с глубиной: [\(depth)] во время подключения вещания с данной СВН!
@@ -2083,10 +2359,16 @@ internal enum NTXPlayerStates {
            """)
      
      player.playerState = priorState ///``Go back to the same state after alerting...
-    
+                                     
+     
     case let (priorState as Paused<P>, .liveviewModeLoadFailed(error: error, date: date)):
      
-     debugPrint("VSS PAUSED Live Fetch Snapshot Image Error: <\(error.localizedDescription)>")
+     debugPrint("""
+                [- PAUSED STATE ERROR -] Live Fetch Snapshot Image Error:
+                Не удалось загрузить снимок за \(date) во время живой трансляции!
+                Загрузка снимка отменена последней операцией плеера!
+                <\(error)>
+                """)
      
      alert("""
            Не удалось загрузить снимок за \(date) во время живой трансляции!
@@ -2100,7 +2382,12 @@ internal enum NTXPlayerStates {
      
     case let (priorState as Paused<P>, .archiveShotsPrefetchFailed(error: error, depth: depth, url: url)):
      
-     debugPrint("VSS PAUSED - Fetch Archive Image Error: <\(error.localizedDescription)> from URL: \(url as Any)")
+     debugPrint("""
+                [- PAUSED STATE ERROR -] Fetch Archive Image Error:
+                Не удалось загрузить архивный снимок с глубиной \(depth)!
+                Загрузка архивного снимка отменена последней операцией плеера!
+                <\(error)> from URL: \(url as Any)
+                """)
      
      alert("""
            Не удалось загрузить архивный снимок с глубиной \(depth)!
@@ -2112,7 +2399,12 @@ internal enum NTXPlayerStates {
                                    
     case let (priorState as Streaming<P>, .archiveShotsPrefetchFailed(error: error, depth: depth, url: url)):
      
-     debugPrint("VSS STREAMING - Fetch Archive Image Error: <\(error.localizedDescription)> from URL: \(url as Any)")
+     debugPrint("""
+                [- STREAMING STATE ERROR -] Fetch Archive Image Error:
+                Не удалось загрузить архивный снимок с глубиной \(depth)!
+                Загрузка архивного снимка отменена последней операцией плеера!
+                <\(error)> from URL: \(url as Any)
+                """)
      
      alert("""
            Не удалось загрузить архивный снимок с глубиной \(depth)!
@@ -2124,7 +2416,13 @@ internal enum NTXPlayerStates {
                                    
     case let (state as Streaming<P>,  .playerContextFailed(error: error)) :
      
-     debugPrint("Player AVPlayer Context Error: <\(error.localizedDescription)>")
+     debugPrint("""
+                [- STREAMING STATE ERROR -] Player AVPlayer Context Error:
+                Вещание с данного ресурса СВН временно не доступно!
+                Запрос будет отправлен повторно на сервер!
+                Количество попыток ограничено!
+                <\(error)>
+                """)
      
      alert("""
            Вещание с данного ресурса СВН временно не доступно!
@@ -2142,6 +2440,14 @@ internal enum NTXPlayerStates {
                                     viewModeInterval  : state.viewModeInterval)
      
     case let ( state as Streaming<P>,  .playerContextRetryCountEcxeeded) :
+     
+     debugPrint("""
+                [- STREAMING STATE ERROR -] Player AVPlayer Context Error:
+                Вещание полученного ресурса СВН не возможно!
+                Количество попыток подключения исчерпано!
+                Плеер будет остановлен.
+                <\(error)>
+                """)
      
      alert("""
            Вещание полученного ресурса СВН не возможно!
@@ -2161,9 +2467,16 @@ internal enum NTXPlayerStates {
      player.playerState = Stopped(player: player)
      
     case let (state as PlayingArchive<P>,  .contextFailedToPlayArchive(error: error, from: url)) :
-     debugPrint("Player AVPlayer Archive Context Error: <\(error.localizedDescription)>")
      
      let depthSeconds = state.depthSeconds - player.archiveTimeStepSeconds
+     
+     debugPrint("""
+               [- ARCHIVE STATE ERROR -] Player AVPlayer Archive Context Error:
+               Не возможно воспроизвести запись из архива c глубиной [ -\(state.depthSeconds) сек. ]
+               Будет воспроизведена следующая запись с глубиной [ -\(depthSeconds) cек. ]
+               <\(error)>
+               """)
+     
      
      alert("""
            Не возможно воспроизвести запись из архива c глубиной [ -\(state.depthSeconds) сек. ]
@@ -2178,29 +2491,51 @@ internal enum NTXPlayerStates {
                                                                  url          : url ))
      //swith to the next (-10 s) record request...
      player.playerState = PlayingArchive(player            : player,
-                                         depthSeconds      : depthSeconds,
+                                         depthSeconds      : depthSeconds ,
                                          liveStreamURL     : state.liveStreamURL,
                                          viewMode          : state.viewMode,
                                          viewModeInterval  : state.viewModeInterval)
      
     case let (priorState as Connected<P> , .archiveRequestFailed(error: error)) :
      
-     debugPrint("Archive Preload Failed: <\(error.localizedDescription)>")
+     debugPrint("""
+                [- CONNECTED STATE ERROR -] Archive Controls Preload Failed:
+                Не возможно загрузить архивные данные СВН ID [\(VSSID)],
+                во время подключения. Вещание будет продолжено в живом режиме!
+                Архивные записи будут не доступны!
+                REQUEST URL: [\(archiveControlsURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                """)
      
      alert("""
-           Не возможно загрузить архивные данные СВН во время подключения.
+           Не возможно загрузить архивные данные СВН ID [\(VSSID)] во время подключения.
            Вещание будет продолжено в живом режиме!
            Архивные записи будут не доступны!
            """)
      
-     player.playerState = priorState ///``Go back to the same state after alerting...
-                                     ///
-    case let (priorState as Streaming<P> , .archiveRequestFailed(error: error)) :
+     player.playerStateDelegate? /// ``PlayerDelegate.playerFailedToGetInfo(3)``
+      .playerDidFailedWithError(deviceID: player.inputVSSSearchResult.id,
+                                with: .playerFailedToGetInfo(error: error,
+                                                             deviceID: player.inputVSSSearchResult.id,
+                                                             url: player.deviceConnectionRequest?.requestURL))
      
-     debugPrint("Archive Preload Failed: <\(error.localizedDescription)>")
+     
+     player.playerState = priorState ///``Go back to the same state after alerting...
+                                    
+    case let (priorState as Streaming<P> , .archiveRequestFailed(error: error)) :
+    
+     
+     debugPrint("""
+                [- STREAMING STATE ERROR -] Archive Controls Preload Failed:
+                Не возможно загрузить архивные данные СВН ID [\(VSSID)],
+                во время подключения. Вещание будет продолжено в живом режиме!
+                Архивные записи будут не доступны!
+                REQUEST URL: [\(archiveControlsURL?.absoluteString ?? "N/A")]
+                PLAYER ERROR: [\(error)>]
+                """)
      
      alert("""
-           Не возможно загрузить архивные данные СВН во время подключения.
+           Не возможно загрузить архивные данные СВН ID [\(VSSID)] во время подключения.
            Вещание будет продолжено в живом режиме!
            Архивные записи будут не доступны!
            """)
@@ -2208,23 +2543,39 @@ internal enum NTXPlayerStates {
      player.playerState = priorState ///``Go back to the same state after alerting...
                                      
     case let (state as Streaming<P>,  _ ) :
+     debugPrint("""
+                Внутренняя ошибка плеера при трансляции живого потока!
+                Остановка плеера...
+                PLAYER ERROR: [\(error)>]
+                """)
+     
      alert("Внутренняя ошибка плеера при трансляции живого потока!\nОстановка плеера...")
      state.stopViewMode()
+     
      player.playerState = Stopped(player: player)
      
     case let (state as PlayingArchive<P>,  _ ) :
+     
+     debugPrint("""
+                Внутренняя ошибка плеера при трансляции живого потока!
+                Остановка плеера...
+                PLAYER ERROR: [\(error)>]
+                """)
+     
      alert("Внутренняя ошибка плеера при трансляции видео из архива!\nОстановка плеера...")
      state.stopViewMode()
      player.playerState = Stopped(player: player)
      
+     
+     
     case (_, .stateError(error: let error)):
-     debugPrint("Player State Transition Error:\n<\(error.localizedDescription)>")
+     debugPrint("Player State Transition Error:\n<\(error)>")
      
     case (_, .noLastEnteredBackground):
-     debugPrint("Last entered background time stamp missing: <\(error.localizedDescription)>")
+     debugPrint("Last entered background time stamp missing: <\(error)>")
      
     default:
-     debugPrint("Undefined Failure State:\n \(error.localizedDescription)")
+     debugPrint("Undefined Failure State:\n \(error)")
      
      alert("Внутреняя ошибка состояния плеера!\nОстановка плеера...")
      
@@ -2234,7 +2585,7 @@ internal enum NTXPlayerStates {
      player.playerState = Stopped(player: player)
    }
    
-   try updateKeepAliveState(to: .init(mode: .unchanged, state: .error, archive: nil))
+//   try updateKeepAliveState(to: .init(mode: .unchanged, state: .error, archive: nil))
    
   }
   

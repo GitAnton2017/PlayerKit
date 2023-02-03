@@ -1,14 +1,7 @@
-//
-//  EchdArchiveControl.swift
-//  AreaSight
-//
-//  Created by Александр on 20.10.16.
-//  Copyright © 2016 Netris. All rights reserved.
-//
 
-import UIKit
 
-internal final class EchdArchiveControl: NSObject {
+
+final class ECHDArchiveControl: NSObject, NTXVSSArchiveControlContext{
 
     var data: [ String : AnyObject ]?
     var success = false
@@ -19,7 +12,8 @@ internal final class EchdArchiveControl: NSObject {
  
     var state : String?
     
-    internal init(data:[String : AnyObject]){  // array
+    init(data:[String : AnyObject]) {  // array
+     
         self.data = data
         
         if (data["success"] as? Bool) != nil {

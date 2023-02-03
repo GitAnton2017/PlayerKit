@@ -16,7 +16,7 @@
 
 
 
-public typealias VideoPlayerState = NTXVideoPlayerStates
+public typealias VideoPlayerStateEnum = NTXVideoPlayerStates
 
 public enum NTXVideoPlayerStates: String, Codable, Hashable, CaseIterable {
  case loading   /// (1) идет опрос и зазгрузка СВН

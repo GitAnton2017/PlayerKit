@@ -8,9 +8,9 @@
 
 import UIKit
 
-internal final class EchdCamera: NSObject {
+internal final class ECHDCamera : NSObject, NTXVSSDeviceRequestContext  {
     
-    var json: [String : AnyObject]?
+    var json: [ String : AnyObject ]?
  
     var key: String?
 

@@ -100,6 +100,7 @@ internal extension NTXPlayerAbstractKit {
   let playerPreloadView = makePlayerPreload()
    .confined(to: playerContainerView,
              applying: playerConfiguration.preloadViewInsetsFromContainer)
+  
   playerPreloadView.backgroundColor = .clear
   playerPreloadView.contentMode = .scaleAspectFit
   
@@ -134,7 +135,9 @@ internal extension NTXPlayerAbstractKit {
    //Build Player set of generic control buttons & make it confined to the player container view
    //with adaptive relative size depending upon the frame change of the player container view.
   
-  let playerTimeLine = makeTimeLine().confined(centeredIn: playerContainerView)
+  let playerTimeLine = makeTimeLine().confined(to: playerContainerView)
+  
+  playerTimeLine.backgroundColor = .clear
   
   PlayerTouchView(frame: .zero).confined(to: playerContainerView)
   

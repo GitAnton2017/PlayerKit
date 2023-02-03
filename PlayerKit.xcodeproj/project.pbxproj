@@ -7,85 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A730D4FD294B441A001932B6 /* AppContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D4FC294B441A001932B6 /* AppContext.swift */; };
-		A730D500294B4457001932B6 /* EchdCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D4FE294B4457001932B6 /* EchdCamera.swift */; };
-		A730D501294B4457001932B6 /* EchdSearchCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D4FF294B4457001932B6 /* EchdSearchCamera.swift */; };
-		A730D503294B449D001932B6 /* EchdNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D502294B449D001932B6 /* EchdNotice.swift */; };
-		A730D505294B45F6001932B6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D504294B45F6001932B6 /* Constants.swift */; };
-		A730D507294B4640001932B6 /* EchdEgipSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D506294B4640001932B6 /* EchdEgipSettings.swift */; };
-		A730D509294B4668001932B6 /* EchdFiltersServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D508294B4668001932B6 /* EchdFiltersServiceProtocol.swift */; };
-		A730D50B294B46B2001932B6 /* SmallNotificationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D50A294B46B2001932B6 /* SmallNotificationBar.swift */; };
-		A730D50D294B470A001932B6 /* EchdAuthorizationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D50C294B470A001932B6 /* EchdAuthorizationRequest.swift */; };
-		A730D510294B4796001932B6 /* EchdSearchCameraCountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D50E294B4796001932B6 /* EchdSearchCameraCountRequest.swift */; };
-		A730D511294B4796001932B6 /* EchdSearchCameraListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D50F294B4796001932B6 /* EchdSearchCameraListRequest.swift */; };
-		A730D513294B48F3001932B6 /* EchdLogoutRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D512294B48F3001932B6 /* EchdLogoutRequest.swift */; };
-		A730D515294B4921001932B6 /* EchdPresetsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D514294B4921001932B6 /* EchdPresetsRequest.swift */; };
-		A730D517294B49AF001932B6 /* EchdRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D516294B49AF001932B6 /* EchdRegion.swift */; };
-		A730D519294B49DB001932B6 /* EchdGetMapSettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D518294B49DB001932B6 /* EchdGetMapSettingsRequest.swift */; };
-		A730D51B294B4A22001932B6 /* EchdAreasRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D51A294B4A22001932B6 /* EchdAreasRequest.swift */; };
-		A730D51D294B4A4D001932B6 /* EchdStreamInfoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D51C294B4A4D001932B6 /* EchdStreamInfoRequest.swift */; };
-		A730D51F294B4A6E001932B6 /* EchdSetUserSettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D51E294B4A6E001932B6 /* EchdSetUserSettingsRequest.swift */; };
-		A730D521294B4A98001932B6 /* GetCameraListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D520294B4A98001932B6 /* GetCameraListRequest.swift */; };
-		A730D523294B4AEF001932B6 /* RequestMapCameraOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D522294B4AEF001932B6 /* RequestMapCameraOperation.swift */; };
-		A730D525294B4B40001932B6 /* EchdServerTimeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D524294B4B40001932B6 /* EchdServerTimeRequest.swift */; };
-		A730D527294B4BA6001932B6 /* EchdArchiveControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D526294B4BA6001932B6 /* EchdArchiveControl.swift */; };
-		A730D52E294B4F86001932B6 /* AlertActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D52A294B4F86001932B6 /* AlertActions.swift */; };
-		A730D52F294B4F86001932B6 /* AlertMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D52B294B4F86001932B6 /* AlertMessages.swift */; };
-		A730D530294B4F86001932B6 /* AlertActivityItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D52C294B4F86001932B6 /* AlertActivityItems.swift */; };
-		A730D531294B4F86001932B6 /* AlertTitles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D52D294B4F86001932B6 /* AlertTitles.swift */; };
-		A730D533294B50B4001932B6 /* FiltersParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D532294B50B4001932B6 /* FiltersParser.swift */; };
-		A730D535294B5289001932B6 /* EchdSearchCameraListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D534294B5289001932B6 /* EchdSearchCameraListResponse.swift */; };
-		A730D537294B52B9001932B6 /* EchdMoveCameraToHomePositionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D536294B52B9001932B6 /* EchdMoveCameraToHomePositionRequest.swift */; };
-		A730D539294B534C001932B6 /* EchdMoveZoomRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D538294B534C001932B6 /* EchdMoveZoomRequest.swift */; };
-		A730D53B294B5371001932B6 /* EchdAddToFavoriteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D53A294B5371001932B6 /* EchdAddToFavoriteRequest.swift */; };
-		A730D53D294B53D2001932B6 /* EchdRemoveFromFavoriteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D53C294B53D2001932B6 /* EchdRemoveFromFavoriteRequest.swift */; };
-		A730D53F294B5404001932B6 /* EchdGetPositionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D53E294B5404001932B6 /* EchdGetPositionRequest.swift */; };
-		A730D541294B5452001932B6 /* EchdMoveRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D540294B5452001932B6 /* EchdMoveRequest.swift */; };
-		A730D543294B54AF001932B6 /* CameraColorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D542294B54AF001932B6 /* CameraColorSource.swift */; };
-		A730D545294B54D2001932B6 /* FilterNodesSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D544294B54D2001932B6 /* FilterNodesSource.swift */; };
-		A730D547294B5505001932B6 /* FilterNodeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D546294B5505001932B6 /* FilterNodeProtocol.swift */; };
-		A730D54E294B55D2001932B6 /* FilterEnv.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D548294B55D1001932B6 /* FilterEnv.swift */; };
-		A730D54F294B55D2001932B6 /* Region.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D549294B55D1001932B6 /* Region.swift */; };
-		A730D550294B55D2001932B6 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D54A294B55D1001932B6 /* Filter.swift */; };
-		A730D551294B55D2001932B6 /* CameraStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D54B294B55D2001932B6 /* CameraStatus.swift */; };
-		A730D552294B55D2001932B6 /* CameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D54C294B55D2001932B6 /* CameraType.swift */; };
-		A730D553294B55D2001932B6 /* District.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D54D294B55D2001932B6 /* District.swift */; };
-		A730D555294B561A001932B6 /* LoginViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D554294B561A001932B6 /* LoginViewControllerDelegate.swift */; };
-		A730D558294B563F001932B6 /* LoginViewControllerAuthMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D556294B563F001932B6 /* LoginViewControllerAuthMode.swift */; };
-		A730D559294B563F001932B6 /* LoginViewControllerActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D557294B563F001932B6 /* LoginViewControllerActions.swift */; };
-		A730D55B294B567D001932B6 /* EchdClearFavoriteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D55A294B567D001932B6 /* EchdClearFavoriteRequest.swift */; };
-		A730D55D294B569C001932B6 /* EchdSettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D55C294B569C001932B6 /* EchdSettingsRequest.swift */; };
-		A730D55F294B56F6001932B6 /* AuthorizationTypeNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D55E294B56F6001932B6 /* AuthorizationTypeNames.swift */; };
-		A730D561294B5723001932B6 /* EchdNoticeListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D560294B5723001932B6 /* EchdNoticeListRequest.swift */; };
-		A730D567294B57DA001932B6 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D566294B57DA001932B6 /* CustomError.swift */; };
-		A730D569294B5901001932B6 /* SudirSessionCookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D568294B5901001932B6 /* SudirSessionCookies.swift */; };
-		A730D56C294B5944001932B6 /* EchdRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D56B294B5944001932B6 /* EchdRequests.swift */; };
-		A730D56E294B5A20001932B6 /* Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D56D294B5A20001932B6 /* Headers.swift */; };
-		A730D570294B5CB4001932B6 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D56F294B5CB4001932B6 /* String+Extensions.swift */; };
-		A730D572294B5DBD001932B6 /* EchdAgregationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D571294B5DBD001932B6 /* EchdAgregationSettings.swift */; };
-		A730D574294B5E1F001932B6 /* EchdGetRootRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D573294B5E1F001932B6 /* EchdGetRootRequest.swift */; };
-		A730D576294B5E82001932B6 /* EchdMapAreaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D575294B5E82001932B6 /* EchdMapAreaResponse.swift */; };
-		A730D578294B610A001932B6 /* SudirTokensRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D577294B610A001932B6 /* SudirTokensRequest.swift */; };
-		A730D57A294B612F001932B6 /* SudirRefreshTokensParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D579294B612F001932B6 /* SudirRefreshTokensParameters.swift */; };
-		A730D57C294B6194001932B6 /* SudirTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D57B294B6194001932B6 /* SudirTokens.swift */; };
-		A730D57E294B61B2001932B6 /* SudirAuthenticateParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D57D294B61B2001932B6 /* SudirAuthenticateParameters.swift */; };
-		A730D580294B67D3001932B6 /* DateFormats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D57F294B67D3001932B6 /* DateFormats.swift */; };
-		A730D582294B68CF001932B6 /* LabelsTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D581294B68CF001932B6 /* LabelsTexts.swift */; };
-		A730D584294B69A8001932B6 /* EchdCameraStatusColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D583294B69A8001932B6 /* EchdCameraStatusColor.swift */; };
 		A7580CDE294E1FF6006BFADE /* ECHD VSS Connection Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7580CDD294E1FF6006BFADE /* ECHD VSS Connection Request.swift */; };
 		A7580CE0294E27D4006BFADE /* ECHD VSS Controls Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7580CDF294E27D4006BFADE /* ECHD VSS Controls Request.swift */; };
-		A7580CE2294E2A59006BFADE /* ECHD VSS Photo Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7580CE1294E2A59006BFADE /* ECHD VSS Photo Request.swift */; };
-		A7580D6C294F628D006BFADE /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A7580D6B294F628D006BFADE /* Alamofire */; };
-		A7580D6F294F629F006BFADE /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = A7580D6E294F629F006BFADE /* SwiftyJSON */; };
-		A7580D72294F62B3006BFADE /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A7580D71294F62B3006BFADE /* KeychainAccess */; };
+		A7580CE2294E2A59006BFADE /* ECHD VSS Live Photo Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7580CE1294E2A59006BFADE /* ECHD VSS Live Photo Request.swift */; };
 		A7580D75294F6A32006BFADE /* Controls.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7580D74294F6A32006BFADE /* Controls.xcassets */; };
 		A7627C62294CA85D008CB903 /* Player Kit Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7627C61294CA85D008CB903 /* Player Kit Protocol.swift */; };
 		A7627C64294CA8E5008CB903 /* Player Kit Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7627C63294CA8E5008CB903 /* Player Kit Configuration.swift */; };
 		A76CE6D7295AC30800D4B286 /* VideoAdmixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6D5295AC30800D4B286 /* VideoAdmixture.swift */; };
 		A76CE6D8295AC30800D4B286 /* AdmixtureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6D6295AC30800D4B286 /* AdmixtureView.swift */; };
-		A76CE6DA295B054F00D4B286 /* ECHD Server Settings Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6D9295B054F00D4B286 /* ECHD Server Settings Request.swift */; };
+		A76CE6DA295B054F00D4B286 /* ECHD Get Server Settings Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6D9295B054F00D4B286 /* ECHD Get Server Settings Request.swift */; };
 		A76CE6DC295B3A6D00D4B286 /* ECHD VSS Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6DB295B3A6D00D4B286 /* ECHD VSS Description.swift */; };
 		A76CE6DE295B3D8A00D4B286 /* ECHD VSS List Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE6DD295B3D8A00D4B286 /* ECHD VSS List Request.swift */; };
+		A76CE6DF295E0AD500D4B286 /* ECHD Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D4FE294B4457001932B6 /* ECHD Camera.swift */; };
+		A76CE6E0295E0B0D00D4B286 /* ECHD Archive Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = A730D526294B4BA6001932B6 /* ECHD Archive Control.swift */; };
+		A76CE736296B1C9A00D4B286 /* Request Representable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE735296B1C9A00D4B286 /* Request Representable.swift */; };
+		A76CE73D296DA88E00D4B286 /* HTTP Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE73C296DA88E00D4B286 /* HTTP Methods.swift */; };
+		A76CE73F296DA8F300D4B286 /* Request Representable Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE73E296DA8F300D4B286 /* Request Representable Result.swift */; };
+		A76CE741296DA91100D4B286 /* Request Representable Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE740296DA91100D4B286 /* Request Representable Combine.swift */; };
+		A76CE743296DA92600D4B286 /* Request Representable Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE742296DA92600D4B286 /* Request Representable Async.swift */; };
+		A76CE745296DA95600D4B286 /* HTTP Request Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE744296DA95600D4B286 /* HTTP Request Errors.swift */; };
+		A76CE747296EECBE00D4B286 /* ECHD VSS Archive Photo Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CE746296EECBE00D4B286 /* ECHD VSS Archive Photo Request.swift */; };
 		A771A15A294B23EA0042C578 /* PlayerKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = A771A159294B23EA0042C578 /* PlayerKit.docc */; };
 		A771A160294B23EB0042C578 /* PlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A771A155294B23EA0042C578 /* PlayerKit.framework */; };
 		A771A165294B23EB0042C578 /* PlayerKitFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A164294B23EB0042C578 /* PlayerKitFrameworkTests.swift */; };
@@ -94,7 +35,6 @@
 		A771A1C0294B2E350042C578 /* Player VSS Request Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1B0294B2E320042C578 /* Player VSS Request Context.swift */; };
 		A771A1C1294B2E350042C578 /* Player Time Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1B1294B2E320042C578 /* Player Time Line.swift */; };
 		A771A1C2294B2E350042C578 /* Player Images Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1B2294B2E320042C578 /* Player Images Cache.swift */; };
-		A771A1C3294B2E350042C578 /* Player Keep Alive.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1B3294B2E320042C578 /* Player Keep Alive.swift */; };
 		A771A1C4294B2E350042C578 /* Player VSS Search Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1B4294B2E330042C578 /* Player VSS Search Context.swift */; };
 		A771A1C5294B2E350042C578 /* Player Alerts Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1B5294B2E330042C578 /* Player Alerts Protocol.swift */; };
 		A771A1C6294B2E350042C578 /* Player Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1B6294B2E330042C578 /* Player Class.swift */; };
@@ -106,32 +46,13 @@
 		A771A1CD294B2E350042C578 /* Player VSS Archive Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1BD294B2E350042C578 /* Player VSS Archive Context.swift */; };
 		A771A1CE294B2E350042C578 /* Player Connections Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1BE294B2E350042C578 /* Player Connections Manager.swift */; };
 		A771A1CF294B2E350042C578 /* Player Controls.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1BF294B2E350042C578 /* Player Controls.swift */; };
-		A771A1D2294B2F9F0042C578 /* AbstractRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1D1294B2F9F0042C578 /* AbstractRequest.swift */; };
-		A771A1D7294B30DE0042C578 /* EchdConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1D6294B30DE0042C578 /* EchdConnectionManager.swift */; };
-		A771A1E2294B32A10042C578 /* SystemAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1D8294B329E0042C578 /* SystemAPIService.swift */; };
-		A771A1E3294B32A10042C578 /* EchdSettingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1D9294B329F0042C578 /* EchdSettingsService.swift */; };
-		A771A1E4294B32A10042C578 /* EchdKeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1DA294B329F0042C578 /* EchdKeychainService.swift */; };
-		A771A1E5294B32A10042C578 /* RepeatingTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1DB294B329F0042C578 /* RepeatingTimer.swift */; };
-		A771A1E6294B32A10042C578 /* EchdMakeShareLinkOfCameraSevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1DC294B329F0042C578 /* EchdMakeShareLinkOfCameraSevice.swift */; };
-		A771A1E7294B32A10042C578 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1DD294B32A00042C578 /* AuthService.swift */; };
-		A771A1E8294B32A10042C578 /* EchdKeepAliveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1DE294B32A00042C578 /* EchdKeepAliveService.swift */; };
-		A771A1E9294B32A10042C578 /* EchdNoticeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1DF294B32A00042C578 /* EchdNoticeService.swift */; };
-		A771A1EA294B32A10042C578 /* EchdServerTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1E0294B32A00042C578 /* EchdServerTimeService.swift */; };
-		A771A1EB294B32A10042C578 /* EchdMakeVideoArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A771A1E1294B32A10042C578 /* EchdMakeVideoArchiveService.swift */; };
 		A775081C294CAE240098449B /* Player Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A775081B294CAE240098449B /* Player Protocol.swift */; };
 		A7750824294CB49E0098449B /* ECHD Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7750823294CB49E0098449B /* ECHD Connections.swift */; };
 		A7750826294CBD990098449B /* Player Public States.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7750825294CBD990098449B /* Player Public States.swift */; };
 		A7750828294CBFA30098449B /* Player States Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7750827294CBFA30098449B /* Player States Delegate.swift */; };
-		A78540FD294B3C5900417336 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78540FA294B3C5800417336 /* Credentials.swift */; };
-		A78540FE294B3C5900417336 /* SettingsEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78540FB294B3C5900417336 /* SettingsEntity.swift */; };
-		A78540FF294B3C5900417336 /* UsersListEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78540FC294B3C5900417336 /* UsersListEntity.swift */; };
-		A7854101294B3D4E00417336 /* EchdCameraRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7854100294B3D4E00417336 /* EchdCameraRequest.swift */; };
-		A7854105294B3E0800417336 /* EchdKeepAliveRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7854102294B3E0800417336 /* EchdKeepAliveRequest.swift */; };
-		A7854106294B3E0800417336 /* EchdArchiveControlsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7854103294B3E0800417336 /* EchdArchiveControlsRequest.swift */; };
-		A7854107294B3E0800417336 /* EchdMakePhotoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7854104294B3E0800417336 /* EchdMakePhotoRequest.swift */; };
-		A7854109294B3EB700417336 /* SudirAuthenticateRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7854108294B3EB700417336 /* SudirAuthenticateRequest.swift */; };
-		A785416C294B3FD500417336 /* AppVersionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A785416B294B3FD500417336 /* AppVersionHelper.swift */; };
-		A785416E294B3FF100417336 /* AppDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A785416D294B3FF100417336 /* AppDefaults.swift */; };
+		A79A72D02977298000F8A7EA /* Player Beating Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79A72CF2977298000F8A7EA /* Player Beating Activity.swift */; };
+		A79A72D22978280B00F8A7EA /* Player Archive Control View.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79A72D12978280B00F8A7EA /* Player Archive Control View.swift */; };
+		A79A72D42978283200F8A7EA /* Player Running Arrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79A72D32978283200F8A7EA /* Player Running Arrows.swift */; };
 		A79FD8B3294BCAE800F9AC2C /* Module Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79FD8B2294BCAE800F9AC2C /* Module Player.swift */; };
 		A7D2D550295087570076056E /* Video Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D2D54F295087570076056E /* Video Module.swift */; };
 		A7E8DE232951E4F600F3BDDA /* Player Touch View.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E8DE222951E4F600F3BDDA /* Player Touch View.swift */; };
@@ -149,7 +70,7 @@
 
 /* Begin PBXFileReference section */
 		A730D4FC294B441A001932B6 /* AppContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppContext.swift; sourceTree = "<group>"; };
-		A730D4FE294B4457001932B6 /* EchdCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EchdCamera.swift; sourceTree = "<group>"; };
+		A730D4FE294B4457001932B6 /* ECHD Camera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ECHD Camera.swift"; sourceTree = "<group>"; };
 		A730D4FF294B4457001932B6 /* EchdSearchCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EchdSearchCamera.swift; sourceTree = "<group>"; };
 		A730D502294B449D001932B6 /* EchdNotice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EchdNotice.swift; sourceTree = "<group>"; };
 		A730D504294B45F6001932B6 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -169,7 +90,7 @@
 		A730D520294B4A98001932B6 /* GetCameraListRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetCameraListRequest.swift; sourceTree = "<group>"; };
 		A730D522294B4AEF001932B6 /* RequestMapCameraOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestMapCameraOperation.swift; sourceTree = "<group>"; };
 		A730D524294B4B40001932B6 /* EchdServerTimeRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EchdServerTimeRequest.swift; sourceTree = "<group>"; };
-		A730D526294B4BA6001932B6 /* EchdArchiveControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EchdArchiveControl.swift; sourceTree = "<group>"; };
+		A730D526294B4BA6001932B6 /* ECHD Archive Control.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ECHD Archive Control.swift"; sourceTree = "<group>"; };
 		A730D52A294B4F86001932B6 /* AlertActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertActions.swift; sourceTree = "<group>"; };
 		A730D52B294B4F86001932B6 /* AlertMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertMessages.swift; sourceTree = "<group>"; };
 		A730D52C294B4F86001932B6 /* AlertActivityItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertActivityItems.swift; sourceTree = "<group>"; };
@@ -215,15 +136,22 @@
 		A730D583294B69A8001932B6 /* EchdCameraStatusColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EchdCameraStatusColor.swift; sourceTree = "<group>"; };
 		A7580CDD294E1FF6006BFADE /* ECHD VSS Connection Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS Connection Request.swift"; sourceTree = "<group>"; };
 		A7580CDF294E27D4006BFADE /* ECHD VSS Controls Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS Controls Request.swift"; sourceTree = "<group>"; };
-		A7580CE1294E2A59006BFADE /* ECHD VSS Photo Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS Photo Request.swift"; sourceTree = "<group>"; };
+		A7580CE1294E2A59006BFADE /* ECHD VSS Live Photo Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS Live Photo Request.swift"; sourceTree = "<group>"; };
 		A7580D74294F6A32006BFADE /* Controls.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Controls.xcassets; sourceTree = "<group>"; };
 		A7627C61294CA85D008CB903 /* Player Kit Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Kit Protocol.swift"; sourceTree = "<group>"; };
 		A7627C63294CA8E5008CB903 /* Player Kit Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Kit Configuration.swift"; sourceTree = "<group>"; };
 		A76CE6D5295AC30800D4B286 /* VideoAdmixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoAdmixture.swift; sourceTree = "<group>"; };
 		A76CE6D6295AC30800D4B286 /* AdmixtureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdmixtureView.swift; sourceTree = "<group>"; };
-		A76CE6D9295B054F00D4B286 /* ECHD Server Settings Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD Server Settings Request.swift"; sourceTree = "<group>"; };
+		A76CE6D9295B054F00D4B286 /* ECHD Get Server Settings Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD Get Server Settings Request.swift"; sourceTree = "<group>"; };
 		A76CE6DB295B3A6D00D4B286 /* ECHD VSS Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS Description.swift"; sourceTree = "<group>"; };
 		A76CE6DD295B3D8A00D4B286 /* ECHD VSS List Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS List Request.swift"; sourceTree = "<group>"; };
+		A76CE735296B1C9A00D4B286 /* Request Representable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request Representable.swift"; sourceTree = "<group>"; };
+		A76CE73C296DA88E00D4B286 /* HTTP Methods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTP Methods.swift"; sourceTree = "<group>"; };
+		A76CE73E296DA8F300D4B286 /* Request Representable Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request Representable Result.swift"; sourceTree = "<group>"; };
+		A76CE740296DA91100D4B286 /* Request Representable Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request Representable Combine.swift"; sourceTree = "<group>"; };
+		A76CE742296DA92600D4B286 /* Request Representable Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request Representable Async.swift"; sourceTree = "<group>"; };
+		A76CE744296DA95600D4B286 /* HTTP Request Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTP Request Errors.swift"; sourceTree = "<group>"; };
+		A76CE746296EECBE00D4B286 /* ECHD VSS Archive Photo Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ECHD VSS Archive Photo Request.swift"; sourceTree = "<group>"; };
 		A771A155294B23EA0042C578 /* PlayerKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayerKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A771A158294B23EA0042C578 /* PlayerKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerKit.h; sourceTree = "<group>"; };
 		A771A159294B23EA0042C578 /* PlayerKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = PlayerKit.docc; sourceTree = "<group>"; };
@@ -271,6 +199,9 @@
 		A7854108294B3EB700417336 /* SudirAuthenticateRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudirAuthenticateRequest.swift; sourceTree = "<group>"; };
 		A785416B294B3FD500417336 /* AppVersionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppVersionHelper.swift; sourceTree = "<group>"; };
 		A785416D294B3FF100417336 /* AppDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDefaults.swift; sourceTree = "<group>"; };
+		A79A72CF2977298000F8A7EA /* Player Beating Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Beating Activity.swift"; sourceTree = "<group>"; };
+		A79A72D12978280B00F8A7EA /* Player Archive Control View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Archive Control View.swift"; sourceTree = "<group>"; };
+		A79A72D32978283200F8A7EA /* Player Running Arrows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Running Arrows.swift"; sourceTree = "<group>"; };
 		A79FD8B2294BCAE800F9AC2C /* Module Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Module Player.swift"; sourceTree = "<group>"; };
 		A7D2D54F295087570076056E /* Video Module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Video Module.swift"; sourceTree = "<group>"; };
 		A7E8DE222951E4F600F3BDDA /* Player Touch View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Touch View.swift"; sourceTree = "<group>"; };
@@ -281,9 +212,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7580D6F294F629F006BFADE /* SwiftyJSON in Frameworks */,
-				A7580D6C294F628D006BFADE /* Alamofire in Frameworks */,
-				A7580D72294F62B3006BFADE /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,12 +241,13 @@
 		A730D585294B8F04001932B6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				A730D54D294B55D2001932B6 /* District.swift */,
+				A771A1B3294B2E320042C578 /* Player Keep Alive.swift */,
 				A730D549294B55D1001932B6 /* Region.swift */,
+				A730D54D294B55D2001932B6 /* District.swift */,
+				A730D532294B50B4001932B6 /* FiltersParser.swift */,
 				A730D54A294B55D1001932B6 /* Filter.swift */,
 				A730D54B294B55D2001932B6 /* CameraStatus.swift */,
 				A730D54C294B55D2001932B6 /* CameraType.swift */,
-				A730D532294B50B4001932B6 /* FiltersParser.swift */,
 				A730D52B294B4F86001932B6 /* AlertMessages.swift */,
 				A730D52A294B4F86001932B6 /* AlertActions.swift */,
 				A730D52C294B4F86001932B6 /* AlertActivityItems.swift */,
@@ -341,6 +270,7 @@
 		A730D586294B9091001932B6 /* PLAYER */ = {
 			isa = PBXGroup;
 			children = (
+				A76CE739296DA7E200D4B286 /* NETWORKING */,
 				A7750822294CB3D30098449B /* VR CONTEXT */,
 				A7750821294CB3BD0098449B /* CONTEXT */,
 				A775081F294CB3160098449B /* CONNECTIONS */,
@@ -383,7 +313,6 @@
 			isa = PBXGroup;
 			children = (
 				A771A1B6294B2E330042C578 /* Player Class.swift */,
-				A771A1B3294B2E320042C578 /* Player Keep Alive.swift */,
 				A771A1B2294B2E320042C578 /* Player Images Cache.swift */,
 				A775081B294CAE240098449B /* Player Protocol.swift */,
 				A79FD8B2294BCAE800F9AC2C /* Module Player.swift */,
@@ -400,11 +329,35 @@
 				A771A1BB294B2E340042C578 /* UIView Extensions.swift */,
 				A771A1AC294B28240042C578 /* Player Activity Protocol.swift */,
 				A771A1B5294B2E330042C578 /* Player Alerts Protocol.swift */,
+				A79A72CF2977298000F8A7EA /* Player Beating Activity.swift */,
 				A771A1BF294B2E350042C578 /* Player Controls.swift */,
 				A771A1B1294B2E320042C578 /* Player Time Line.swift */,
+				A79A72D12978280B00F8A7EA /* Player Archive Control View.swift */,
+				A79A72D32978283200F8A7EA /* Player Running Arrows.swift */,
 				A7E8DE222951E4F600F3BDDA /* Player Touch View.swift */,
 			);
 			path = "Player UI Components";
+			sourceTree = "<group>";
+		};
+		A76CE739296DA7E200D4B286 /* NETWORKING */ = {
+			isa = PBXGroup;
+			children = (
+				A76CE73B296DA84100D4B286 /* URL Session */,
+			);
+			path = NETWORKING;
+			sourceTree = "<group>";
+		};
+		A76CE73B296DA84100D4B286 /* URL Session */ = {
+			isa = PBXGroup;
+			children = (
+				A76CE735296B1C9A00D4B286 /* Request Representable.swift */,
+				A76CE744296DA95600D4B286 /* HTTP Request Errors.swift */,
+				A76CE73E296DA8F300D4B286 /* Request Representable Result.swift */,
+				A76CE740296DA91100D4B286 /* Request Representable Combine.swift */,
+				A76CE742296DA92600D4B286 /* Request Representable Async.swift */,
+				A76CE73C296DA88E00D4B286 /* HTTP Methods.swift */,
+			);
+			path = "URL Session";
 			sourceTree = "<group>";
 		};
 		A771A14B294B23EA0042C578 = {
@@ -449,6 +402,9 @@
 		A771A1D0294B2F1C0042C578 /* ECHD Components */ = {
 			isa = PBXGroup;
 			children = (
+				A7854102294B3E0800417336 /* EchdKeepAliveRequest.swift */,
+				A771A1DE294B32A00042C578 /* EchdKeepAliveService.swift */,
+				A771A1D1294B2F9F0042C578 /* AbstractRequest.swift */,
 				A730D583294B69A8001932B6 /* EchdCameraStatusColor.swift */,
 				A730D573294B5E1F001932B6 /* EchdGetRootRequest.swift */,
 				A730D575294B5E82001932B6 /* EchdMapAreaResponse.swift */,
@@ -471,7 +427,6 @@
 				A730D538294B534C001932B6 /* EchdMoveZoomRequest.swift */,
 				A730D524294B4B40001932B6 /* EchdServerTimeRequest.swift */,
 				A730D534294B5289001932B6 /* EchdSearchCameraListResponse.swift */,
-				A730D526294B4BA6001932B6 /* EchdArchiveControl.swift */,
 				A730D522294B4AEF001932B6 /* RequestMapCameraOperation.swift */,
 				A730D51E294B4A6E001932B6 /* EchdSetUserSettingsRequest.swift */,
 				A730D518294B49DB001932B6 /* EchdGetMapSettingsRequest.swift */,
@@ -487,7 +442,6 @@
 				A730D50A294B46B2001932B6 /* SmallNotificationBar.swift */,
 				A730D508294B4668001932B6 /* EchdFiltersServiceProtocol.swift */,
 				A730D502294B449D001932B6 /* EchdNotice.swift */,
-				A730D4FE294B4457001932B6 /* EchdCamera.swift */,
 				A730D4FF294B4457001932B6 /* EchdSearchCamera.swift */,
 				A730D4FC294B441A001932B6 /* AppContext.swift */,
 				A785416D294B3FF100417336 /* AppDefaults.swift */,
@@ -495,12 +449,10 @@
 				A7854108294B3EB700417336 /* SudirAuthenticateRequest.swift */,
 				A7854100294B3D4E00417336 /* EchdCameraRequest.swift */,
 				A7854103294B3E0800417336 /* EchdArchiveControlsRequest.swift */,
-				A7854102294B3E0800417336 /* EchdKeepAliveRequest.swift */,
 				A7854104294B3E0800417336 /* EchdMakePhotoRequest.swift */,
 				A730D506294B4640001932B6 /* EchdEgipSettings.swift */,
 				A771A1D6294B30DE0042C578 /* EchdConnectionManager.swift */,
 				A771A1DA294B329F0042C578 /* EchdKeychainService.swift */,
-				A771A1DE294B32A00042C578 /* EchdKeepAliveService.swift */,
 				A771A1E0294B32A00042C578 /* EchdServerTimeService.swift */,
 				A771A1DF294B32A00042C578 /* EchdNoticeService.swift */,
 				A771A1E1294B32A10042C578 /* EchdMakeVideoArchiveService.swift */,
@@ -509,7 +461,6 @@
 				A771A1DD294B32A00042C578 /* AuthService.swift */,
 				A771A1D8294B329E0042C578 /* SystemAPIService.swift */,
 				A771A1D9294B329F0042C578 /* EchdSettingsService.swift */,
-				A771A1D1294B2F9F0042C578 /* AbstractRequest.swift */,
 			);
 			path = "ECHD Components";
 			sourceTree = "<group>";
@@ -517,17 +468,8 @@
 		A775081F294CB3160098449B /* CONNECTIONS */ = {
 			isa = PBXGroup;
 			children = (
-				A771A1B0294B2E320042C578 /* Player VSS Request Context.swift */,
-				A771A1B4294B2E330042C578 /* Player VSS Search Context.swift */,
-				A771A1BD294B2E350042C578 /* Player VSS Archive Context.swift */,
-				A771A1BE294B2E350042C578 /* Player Connections Manager.swift */,
-				A7750823294CB49E0098449B /* ECHD Connections.swift */,
-				A7580CDD294E1FF6006BFADE /* ECHD VSS Connection Request.swift */,
-				A7580CDF294E27D4006BFADE /* ECHD VSS Controls Request.swift */,
-				A7580CE1294E2A59006BFADE /* ECHD VSS Photo Request.swift */,
-				A76CE6D9295B054F00D4B286 /* ECHD Server Settings Request.swift */,
-				A76CE6DB295B3A6D00D4B286 /* ECHD VSS Description.swift */,
-				A76CE6DD295B3D8A00D4B286 /* ECHD VSS List Request.swift */,
+				A79A72CA2972C54000F8A7EA /* ECHD IMPL */,
+				A79A72C92972C53100F8A7EA /* PROTOCOLS */,
 			);
 			path = CONNECTIONS;
 			sourceTree = "<group>";
@@ -556,6 +498,34 @@
 				A771A1B9294B2E340042C578 /* Player VR Context.swift */,
 			);
 			path = "VR CONTEXT";
+			sourceTree = "<group>";
+		};
+		A79A72C92972C53100F8A7EA /* PROTOCOLS */ = {
+			isa = PBXGroup;
+			children = (
+				A771A1BE294B2E350042C578 /* Player Connections Manager.swift */,
+				A771A1BD294B2E350042C578 /* Player VSS Archive Context.swift */,
+				A771A1B4294B2E330042C578 /* Player VSS Search Context.swift */,
+				A771A1B0294B2E320042C578 /* Player VSS Request Context.swift */,
+			);
+			path = PROTOCOLS;
+			sourceTree = "<group>";
+		};
+		A79A72CA2972C54000F8A7EA /* ECHD IMPL */ = {
+			isa = PBXGroup;
+			children = (
+				A730D4FE294B4457001932B6 /* ECHD Camera.swift */,
+				A730D526294B4BA6001932B6 /* ECHD Archive Control.swift */,
+				A7750823294CB49E0098449B /* ECHD Connections.swift */,
+				A7580CDD294E1FF6006BFADE /* ECHD VSS Connection Request.swift */,
+				A7580CDF294E27D4006BFADE /* ECHD VSS Controls Request.swift */,
+				A7580CE1294E2A59006BFADE /* ECHD VSS Live Photo Request.swift */,
+				A76CE746296EECBE00D4B286 /* ECHD VSS Archive Photo Request.swift */,
+				A76CE6D9295B054F00D4B286 /* ECHD Get Server Settings Request.swift */,
+				A76CE6DB295B3A6D00D4B286 /* ECHD VSS Description.swift */,
+				A76CE6DD295B3D8A00D4B286 /* ECHD VSS List Request.swift */,
+			);
+			path = "ECHD IMPL";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -587,9 +557,6 @@
 			);
 			name = PlayerKit;
 			packageProductDependencies = (
-				A7580D6B294F628D006BFADE /* Alamofire */,
-				A7580D6E294F629F006BFADE /* SwiftyJSON */,
-				A7580D71294F62B3006BFADE /* KeychainAccess */,
 			);
 			productName = PlayerKitFramework;
 			productReference = A771A155294B23EA0042C578 /* PlayerKit.framework */;
@@ -641,9 +608,6 @@
 			);
 			mainGroup = A771A14B294B23EA0042C578;
 			packageReferences = (
-				A7580D6A294F628D006BFADE /* XCRemoteSwiftPackageReference "Alamofire" */,
-				A7580D6D294F629F006BFADE /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
-				A7580D70294F62B3006BFADE /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = A771A156294B23EA0042C578 /* Products */;
 			projectDirPath = "";
@@ -678,127 +642,51 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A730D533294B50B4001932B6 /* FiltersParser.swift in Sources */,
-				A771A1D2294B2F9F0042C578 /* AbstractRequest.swift in Sources */,
 				A76CE6D8295AC30800D4B286 /* AdmixtureView.swift in Sources */,
 				A771A1CC294B2E350042C578 /* Player Internal States.swift in Sources */,
-				A730D558294B563F001932B6 /* LoginViewControllerAuthMode.swift in Sources */,
-				A730D570294B5CB4001932B6 /* String+Extensions.swift in Sources */,
-				A730D51D294B4A4D001932B6 /* EchdStreamInfoRequest.swift in Sources */,
+				A76CE741296DA91100D4B286 /* Request Representable Combine.swift in Sources */,
 				A771A1C9294B2E350042C578 /* Player VR Context.swift in Sources */,
 				A771A1AD294B28240042C578 /* Player Activity Protocol.swift in Sources */,
+				A79A72D22978280B00F8A7EA /* Player Archive Control View.swift in Sources */,
 				A76CE6DC295B3A6D00D4B286 /* ECHD VSS Description.swift in Sources */,
-				A730D511294B4796001932B6 /* EchdSearchCameraListRequest.swift in Sources */,
-				A730D527294B4BA6001932B6 /* EchdArchiveControl.swift in Sources */,
-				A730D519294B49DB001932B6 /* EchdGetMapSettingsRequest.swift in Sources */,
-				A730D509294B4668001932B6 /* EchdFiltersServiceProtocol.swift in Sources */,
-				A730D57A294B612F001932B6 /* SudirRefreshTokensParameters.swift in Sources */,
 				A79FD8B3294BCAE800F9AC2C /* Module Player.swift in Sources */,
-				A7854101294B3D4E00417336 /* EchdCameraRequest.swift in Sources */,
 				A771A1C4294B2E350042C578 /* Player VSS Search Context.swift in Sources */,
-				A730D541294B5452001932B6 /* EchdMoveRequest.swift in Sources */,
+				A76CE6DF295E0AD500D4B286 /* ECHD Camera.swift in Sources */,
+				A76CE73F296DA8F300D4B286 /* Request Representable Result.swift in Sources */,
 				A7E8DE232951E4F600F3BDDA /* Player Touch View.swift in Sources */,
 				A7627C64294CA8E5008CB903 /* Player Kit Configuration.swift in Sources */,
+				A76CE6E0295E0B0D00D4B286 /* ECHD Archive Control.swift in Sources */,
 				A771A1C1294B2E350042C578 /* Player Time Line.swift in Sources */,
-				A730D510294B4796001932B6 /* EchdSearchCameraCountRequest.swift in Sources */,
 				A771A1C2294B2E350042C578 /* Player Images Cache.swift in Sources */,
-				A730D52F294B4F86001932B6 /* AlertMessages.swift in Sources */,
-				A771A1E5294B32A10042C578 /* RepeatingTimer.swift in Sources */,
-				A730D552294B55D2001932B6 /* CameraType.swift in Sources */,
 				A771A1CD294B2E350042C578 /* Player VSS Archive Context.swift in Sources */,
-				A771A1E4294B32A10042C578 /* EchdKeychainService.swift in Sources */,
-				A730D569294B5901001932B6 /* SudirSessionCookies.swift in Sources */,
 				A76CE6DE295B3D8A00D4B286 /* ECHD VSS List Request.swift in Sources */,
-				A730D582294B68CF001932B6 /* LabelsTexts.swift in Sources */,
-				A785416C294B3FD500417336 /* AppVersionHelper.swift in Sources */,
-				A771A1E3294B32A10042C578 /* EchdSettingsService.swift in Sources */,
-				A730D57C294B6194001932B6 /* SudirTokens.swift in Sources */,
-				A730D515294B4921001932B6 /* EchdPresetsRequest.swift in Sources */,
 				A771A15A294B23EA0042C578 /* PlayerKit.docc in Sources */,
-				A730D580294B67D3001932B6 /* DateFormats.swift in Sources */,
-				A730D551294B55D2001932B6 /* CameraStatus.swift in Sources */,
+				A76CE743296DA92600D4B286 /* Request Representable Async.swift in Sources */,
 				A771A1C0294B2E350042C578 /* Player VSS Request Context.swift in Sources */,
-				A730D576294B5E82001932B6 /* EchdMapAreaResponse.swift in Sources */,
-				A730D55D294B569C001932B6 /* EchdSettingsRequest.swift in Sources */,
-				A730D517294B49AF001932B6 /* EchdRegion.swift in Sources */,
 				A771A1C5294B2E350042C578 /* Player Alerts Protocol.swift in Sources */,
 				A7627C62294CA85D008CB903 /* Player Kit Protocol.swift in Sources */,
+				A76CE747296EECBE00D4B286 /* ECHD VSS Archive Photo Request.swift in Sources */,
 				A7580CE0294E27D4006BFADE /* ECHD VSS Controls Request.swift in Sources */,
-				A730D501294B4457001932B6 /* EchdSearchCamera.swift in Sources */,
-				A730D53F294B5404001932B6 /* EchdGetPositionRequest.swift in Sources */,
-				A730D553294B55D2001932B6 /* District.swift in Sources */,
-				A771A1EA294B32A10042C578 /* EchdServerTimeService.swift in Sources */,
-				A7854106294B3E0800417336 /* EchdArchiveControlsRequest.swift in Sources */,
-				A730D574294B5E1F001932B6 /* EchdGetRootRequest.swift in Sources */,
-				A730D51F294B4A6E001932B6 /* EchdSetUserSettingsRequest.swift in Sources */,
-				A730D4FD294B441A001932B6 /* AppContext.swift in Sources */,
-				A730D51B294B4A22001932B6 /* EchdAreasRequest.swift in Sources */,
-				A785416E294B3FF100417336 /* AppDefaults.swift in Sources */,
-				A730D56C294B5944001932B6 /* EchdRequests.swift in Sources */,
-				A730D543294B54AF001932B6 /* CameraColorSource.swift in Sources */,
-				A730D584294B69A8001932B6 /* EchdCameraStatusColor.swift in Sources */,
+				A79A72D02977298000F8A7EA /* Player Beating Activity.swift in Sources */,
 				A7750824294CB49E0098449B /* ECHD Connections.swift in Sources */,
-				A730D500294B4457001932B6 /* EchdCamera.swift in Sources */,
-				A730D53B294B5371001932B6 /* EchdAddToFavoriteRequest.swift in Sources */,
-				A771A1E2294B32A10042C578 /* SystemAPIService.swift in Sources */,
+				A76CE73D296DA88E00D4B286 /* HTTP Methods.swift in Sources */,
 				A771A1CA294B2E350042C578 /* Player Kit.swift in Sources */,
-				A730D559294B563F001932B6 /* LoginViewControllerActions.swift in Sources */,
-				A730D55F294B56F6001932B6 /* AuthorizationTypeNames.swift in Sources */,
-				A730D57E294B61B2001932B6 /* SudirAuthenticateParameters.swift in Sources */,
-				A730D545294B54D2001932B6 /* FilterNodesSource.swift in Sources */,
-				A771A1E6294B32A10042C578 /* EchdMakeShareLinkOfCameraSevice.swift in Sources */,
-				A730D54F294B55D2001932B6 /* Region.swift in Sources */,
-				A730D50B294B46B2001932B6 /* SmallNotificationBar.swift in Sources */,
-				A7580CE2294E2A59006BFADE /* ECHD VSS Photo Request.swift in Sources */,
-				A730D521294B4A98001932B6 /* GetCameraListRequest.swift in Sources */,
+				A7580CE2294E2A59006BFADE /* ECHD VSS Live Photo Request.swift in Sources */,
 				A7750826294CBD990098449B /* Player Public States.swift in Sources */,
-				A730D503294B449D001932B6 /* EchdNotice.swift in Sources */,
-				A730D54E294B55D2001932B6 /* FilterEnv.swift in Sources */,
-				A730D531294B4F86001932B6 /* AlertTitles.swift in Sources */,
-				A771A1E9294B32A10042C578 /* EchdNoticeService.swift in Sources */,
-				A78540FF294B3C5900417336 /* UsersListEntity.swift in Sources */,
-				A730D56E294B5A20001932B6 /* Headers.swift in Sources */,
-				A7854109294B3EB700417336 /* SudirAuthenticateRequest.swift in Sources */,
-				A730D550294B55D2001932B6 /* Filter.swift in Sources */,
-				A730D513294B48F3001932B6 /* EchdLogoutRequest.swift in Sources */,
 				A7580CDE294E1FF6006BFADE /* ECHD VSS Connection Request.swift in Sources */,
-				A730D530294B4F86001932B6 /* AlertActivityItems.swift in Sources */,
-				A771A1E8294B32A10042C578 /* EchdKeepAliveService.swift in Sources */,
-				A730D50D294B470A001932B6 /* EchdAuthorizationRequest.swift in Sources */,
-				A771A1C3294B2E350042C578 /* Player Keep Alive.swift in Sources */,
 				A7D2D550295087570076056E /* Video Module.swift in Sources */,
-				A7854107294B3E0800417336 /* EchdMakePhotoRequest.swift in Sources */,
 				A7750828294CBFA30098449B /* Player States Delegate.swift in Sources */,
-				A730D561294B5723001932B6 /* EchdNoticeListRequest.swift in Sources */,
-				A771A1E7294B32A10042C578 /* AuthService.swift in Sources */,
-				A730D567294B57DA001932B6 /* CustomError.swift in Sources */,
+				A76CE745296DA95600D4B286 /* HTTP Request Errors.swift in Sources */,
 				A771A1CF294B2E350042C578 /* Player Controls.swift in Sources */,
-				A730D53D294B53D2001932B6 /* EchdRemoveFromFavoriteRequest.swift in Sources */,
-				A730D505294B45F6001932B6 /* Constants.swift in Sources */,
-				A78540FD294B3C5900417336 /* Credentials.swift in Sources */,
 				A775081C294CAE240098449B /* Player Protocol.swift in Sources */,
-				A7854105294B3E0800417336 /* EchdKeepAliveRequest.swift in Sources */,
 				A771A1C6294B2E350042C578 /* Player Class.swift in Sources */,
-				A76CE6DA295B054F00D4B286 /* ECHD Server Settings Request.swift in Sources */,
+				A76CE6DA295B054F00D4B286 /* ECHD Get Server Settings Request.swift in Sources */,
 				A76CE6D7295AC30800D4B286 /* VideoAdmixture.swift in Sources */,
-				A730D52E294B4F86001932B6 /* AlertActions.swift in Sources */,
 				A771A1C7294B2E350042C578 /* Player Context.swift in Sources */,
-				A771A1EB294B32A10042C578 /* EchdMakeVideoArchiveService.swift in Sources */,
-				A730D547294B5505001932B6 /* FilterNodeProtocol.swift in Sources */,
-				A730D535294B5289001932B6 /* EchdSearchCameraListResponse.swift in Sources */,
-				A730D537294B52B9001932B6 /* EchdMoveCameraToHomePositionRequest.swift in Sources */,
-				A730D555294B561A001932B6 /* LoginViewControllerDelegate.swift in Sources */,
-				A730D539294B534C001932B6 /* EchdMoveZoomRequest.swift in Sources */,
-				A730D572294B5DBD001932B6 /* EchdAgregationSettings.swift in Sources */,
-				A730D507294B4640001932B6 /* EchdEgipSettings.swift in Sources */,
-				A730D525294B4B40001932B6 /* EchdServerTimeRequest.swift in Sources */,
-				A730D523294B4AEF001932B6 /* RequestMapCameraOperation.swift in Sources */,
-				A771A1D7294B30DE0042C578 /* EchdConnectionManager.swift in Sources */,
-				A78540FE294B3C5900417336 /* SettingsEntity.swift in Sources */,
-				A730D55B294B567D001932B6 /* EchdClearFavoriteRequest.swift in Sources */,
 				A771A1CE294B2E350042C578 /* Player Connections Manager.swift in Sources */,
+				A76CE736296B1C9A00D4B286 /* Request Representable.swift in Sources */,
 				A771A1CB294B2E350042C578 /* UIView Extensions.swift in Sources */,
-				A730D578294B610A001932B6 /* SudirTokensRequest.swift in Sources */,
+				A79A72D42978283200F8A7EA /* Player Running Arrows.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1068,51 +956,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		A7580D6A294F628D006BFADE /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		A7580D6D294F629F006BFADE /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		A7580D70294F62B3006BFADE /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		A7580D6B294F628D006BFADE /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A7580D6A294F628D006BFADE /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		A7580D6E294F629F006BFADE /* SwiftyJSON */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A7580D6D294F629F006BFADE /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
-			productName = SwiftyJSON;
-		};
-		A7580D71294F62B3006BFADE /* KeychainAccess */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A7580D70294F62B3006BFADE /* XCRemoteSwiftPackageReference "KeychainAccess" */;
-			productName = KeychainAccess;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A771A14C294B23EA0042C578 /* Project object */;
 }

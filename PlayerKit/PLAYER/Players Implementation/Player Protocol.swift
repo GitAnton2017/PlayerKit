@@ -46,7 +46,7 @@ internal protocol NTXMobileNativePlayerProtocol : ArchiveImagesCacheDelegate whe
       shutdownHandler:         @escaping (Delegate.Device) -> () )
  
  
- var currentState:                        VideoPlayerState   { get set } /// External state for public interface
+ var currentState:                    VideoPlayerStateEnum   { get set } /// External state for public interface
                                                                          
  var playerState:                         any NTXPlayerState { get set } /// PLAYER STATE OBJECTS!!
  
@@ -107,20 +107,23 @@ internal protocol NTXMobileNativePlayerProtocol : ArchiveImagesCacheDelegate whe
  
  var viewModeInterval: TimeInterval { get set }
  
- var viewModePolling: Bool  { get set }
+ var viewModePolling : Bool  { get set }
  
  var admixtureResizeToken: NSKeyValueObservation? { get set }
  
+ var showsInternalControls : Bool  { get set }
+ var showsInternalAlerts :   Bool  { get set }
+ 
  func showAlert(alert: NTXPlayerAlert)
  
- var archivePhotoShotsPrefetchRequests  :    [ AbstractRequest ]    { get set }
- var viewModeLivePhotoShotsRequests     :    [ AbstractRequest ]    { get set }
- var viewModeArchivePhotoShotsRequests  :    [ AbstractRequest ]    { get set }
- var deviceConnectionRequest            :      AbstractRequest?     { get set }
- var archiveControlsRequest             :      AbstractRequest?     { get set }
- var livePhotoShotRequest               :      AbstractRequest?     { get set }
- var securityMarkerRequest              :      AbstractRequest?     { get set }
- var descriptionInfoRequest             :      AbstractRequest?     { get set }
+ var archivePhotoShotsPrefetchRequests  :    [ URLSessionRequestRepresentable ]    { get set }
+ var viewModeLivePhotoShotsRequests     :    [ URLSessionRequestRepresentable ]    { get set }
+ var viewModeArchivePhotoShotsRequests  :    [ URLSessionRequestRepresentable ]    { get set }
+ var deviceConnectionRequest            :      URLSessionRequestRepresentable?     { get set }
+ var archiveControlsRequest             :      URLSessionRequestRepresentable?     { get set }
+ var livePhotoShotRequest               :      URLSessionRequestRepresentable?     { get set }
+ var securityMarkerRequest              :      URLSessionRequestRepresentable?     { get set }
+ var descriptionInfoRequest             :      URLSessionRequestRepresentable?     { get set }
  
  var playArchiveRecordEndToken: Any? { get set }
  
@@ -146,7 +149,7 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
   
   guard let deviceContext = currentVSS else { handler(nil); return }
   
-  var request: AbstractRequest?
+  var request: URLSessionRequestRepresentable?
   request = connectionsManager.requestVSSArchiveShot(for:  deviceContext,
                                                      depth: depthSeconds){ [ weak request ] result in
    
@@ -158,12 +161,12 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
    
    switch result {
     case let .success(imageData) : handler(imageData.uiImage)
-    case let .failure(error)     : handler(nil)
+    case  .failure(_ )           : handler(nil)
      
-     self.playerState = NTXPlayerStates.Failed(player: self,
-                                               error: .archiveShotsPrefetchFailed(error : error,
-                                                                                  depth : depthSeconds,
-                                                                                  url   : request?.requestURL))
+//     self.playerState = NTXPlayerStates.Failed(player: self,
+//                                               error: .archiveShotsPrefetchFailed(error : error,
+//                                                                                  depth : depthSeconds,
+//                                                                                  url   : request?.requestURL))
    }
   }
   
@@ -198,12 +201,25 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
   
   playerMutedStateView.isHidden.toggle()
   
-  playerStateDelegate?
-   .playerMutedStateDidChange(deviceID: inputVSSSearchResult.id, muted: isMuted)
+  playerStateDelegate?.playerMutedStateDidChange(deviceID: inputVSSSearchResult.id, muted: isMuted)
   
   return true
  }
  
+ @discardableResult func setPlayerMutedState(isMuted: Bool) -> Bool {
+  
+  debugPrint (#function)
+  
+  guard currentVSSDescription?.hasAudio ?? false else { return false }
+  
+  playerContext.isMuted = isMuted
+  
+  playerMutedStateView.isHidden = !isMuted
+  
+  playerStateDelegate?.playerMutedStateDidChange(deviceID: inputVSSSearchResult.id, muted: isMuted)
+  
+  return true
+ }
  
  @discardableResult func play() -> Bool  {
   
@@ -216,6 +232,9 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
    .playerWillChangeState(deviceID: inputVSSSearchResult.id, to: .playing)
   
   switch playerState {
+    
+   case is NTXPlayerStates.Stopped<Self>: return refresh()
+    
    case let state as NTXPlayerStates.Paused<Self>:
     
     let retryCount = state.viewMode ? NTXPlayerStates.maxVSSStreamingRequests : 0
@@ -243,7 +262,7 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
     
    case let state as NTXPlayerStates.PlayingArchive<Self>:
     
-    let retryCount = state.viewMode ? NTXPlayerStates.maxVSSStreamingRequests : 0
+    let retryCount = NTXPlayerStates.maxVSSStreamingRequests
     
     playerState = NTXPlayerStates.Streaming(player             : self,
                                             streamURL          : state.liveStreamURL,
@@ -340,6 +359,8 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
  
  @discardableResult func playArchive(at timePoint: UInt) -> Bool {
   
+  debugPrint (#function)
+  
   guard let archiveContext = currentVSSArchiveControls else { return false }
   
   let startSec = (archiveContext.start ?? 0) / 1000
@@ -354,9 +375,10 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
  }
  
  @discardableResult func playArchive(with depthSeconds: Int) -> Bool {
-  guard depthSeconds < 0 else { play(); return false }
   
   debugPrint (#function)
+  
+  guard depthSeconds <= 0 else {  return false }
   
   playerStateDelegate?
    .playerControlDidPressed(deviceID: inputVSSSearchResult.id, for: .playArchiveBack)
@@ -559,9 +581,12 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
   
   switch playerState {
    case let state as NTXPlayerStates.Streaming<Self>:
+    
+    let retryCount = NTXPlayerStates.maxVSSStreamingRequests
+    
     playerState = NTXPlayerStates.Streaming(player                 :  self,
                                             streamURL              :  state.streamURL,
-                                            tryRestartCount        :  0,//no restart in this state!
+                                            tryRestartCount        :  retryCount,
                                             archiveDepth           :  state.archiveDepth,
                                             viewMode               :  isActive,
                                             viewModeInterval       :  state.viewModeInterval)
@@ -588,10 +613,12 @@ internal extension NTXMobileNativePlayerProtocol where Manager.InputDevice == De
   
  }
  
-  ///#Toggles Player View Mode using currect view mode time interval.
+  ///#Toggles Player View Mode using current view mode time interval.
  @discardableResult func toggleViewMode() -> Bool {
   
   debugPrint(#function)
+  
+  self.viewModePolling = true
   
   switch playerState {
    case let state as NTXPlayerStates.Streaming<Self>:

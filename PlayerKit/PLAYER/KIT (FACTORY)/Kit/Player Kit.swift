@@ -104,13 +104,13 @@ where Delegate.Device == Manager.InputDevice {
  ///Customize and set the activity indicator. It might be any view that conforms to NTXPlayerActivityIndicator. The default kit uses UIActivityIndicatorView.
  internal static var defaultActivity:  () -> NTXPlayerActivityIndicator  {
   {
-   let ai = UIActivityIndicatorView()
-   if #available(iOS 13.0, *) {
-    ai.style = .large
-   } else {
-    ai.style = .whiteLarge
-   }
-   ai.color = .systemOrange
+   let ai = BeatingActivityView(barColor: .systemOrange, barWidth: 2, barPhase: 1)
+//   if #available(iOS 13.0, *) {
+//    ai.style = .large
+//   } else {
+//    ai.style = .whiteLarge
+//   }
+//   ai.color = .systemOrange
    return ai
   }
  
@@ -122,12 +122,10 @@ where Delegate.Device == Manager.InputDevice {
  ///Customize main player archive time line here. 
  internal static var defaultTimeLine:  () -> NTXPlayerTimeLine           {
   {
-   let label = NTXTimeLineMarkerLabel()
-   label.numberOfLines = 1
-   label.font = .systemFont(ofSize: 50)
-   label.textAlignment = .center
-   label.textColor = .systemOrange.withAlphaComponent(0.75)
-   return label
+   ArchiveControlsView()
+//   let label = NTXTimeLineMarkerLabel()
+//   label.textColor = .systemOrange.withAlphaComponent(0.75)
+//   return label
    
   }
   

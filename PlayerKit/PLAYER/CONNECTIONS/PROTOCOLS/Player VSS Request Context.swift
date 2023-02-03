@@ -31,4 +31,3 @@ internal protocol NTXVSSDeviceRequestContext where Self: NSObject {
  func getArchiveShotControl() -> [String]?
 }
 
-extension EchdCamera: NTXVSSDeviceRequestContext {}

@@ -103,11 +103,12 @@ final internal class NTXDefaultPlayerButton<Player: NTXMobileNativePlayerProtoco
  
  @available(iOS 13.0, *)
  private func setSFSImages() {
-  let img = UIImage(systemName: playerAction.imageName)?
-   .applyingSymbolConfiguration(.init(pointSize: 45))?
-   .withTintColor(.systemOrange)
+  let img = UIImage(systemName: playerAction.imageName)?.applyingSymbolConfiguration(.init(pointSize: 45))?
+   .withTintColor(.systemOrange) ??
+  UIImage(named: playerAction.imageName,
+          in: .init(for: Self.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
   
-  print ("Contol for Action [\(playerAction)] uses SFS image \(img.debugDescription)")
+//  print ("Contol for Action [\(playerAction)] uses SFS image \(img.debugDescription)")
   self.setImage(img, for: .normal)
  }
  
@@ -116,9 +117,9 @@ final internal class NTXDefaultPlayerButton<Player: NTXMobileNativePlayerProtoco
                     in: .init(for: Self.self),
                     compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
   
-  print ("Contol for Action [\(playerAction)] uses custom image \(img.debugDescription)")
+//  print ("Contol for Action [\(playerAction)] uses custom image \(img.debugDescription)")
  
-  self.tintColor = .systemOrange
+  
  
   self.setImage(img, for: .normal)
   
@@ -138,6 +139,7 @@ final internal class NTXDefaultPlayerButton<Player: NTXMobileNativePlayerProtoco
   self.actionHandler = actionHandler
   self.spacing = spacing
   
+  
   super.init(frame: frame)
   if #available(iOS 13.0, *) { setSFSImages() } else { setAssetImages() }
   
@@ -145,7 +147,8 @@ final internal class NTXDefaultPlayerButton<Player: NTXMobileNativePlayerProtoco
   addTarget(self, action: #selector(released), for: .touchUpInside)
   addTarget(self, action: #selector(released), for: .touchCancel)
   
-  self.tintColor = .white
+  self.tintColor = .systemOrange
+  
  }
  
  private var timer: Timer?

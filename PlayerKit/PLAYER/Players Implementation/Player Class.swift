@@ -47,22 +47,30 @@ where Delegate.Device == Manager.InputDevice {
  internal var viewModeTimer: Timer? {
   didSet { oldValue?.invalidate() }
  }
-
- internal var archivePhotoShotsPrefetchRequests = [ AbstractRequest ]()
- internal var viewModeLivePhotoShotsRequests    = [ AbstractRequest ]()
- internal var viewModeArchivePhotoShotsRequests = [ AbstractRequest ]()
  
- internal var deviceConnectionRequest           :   AbstractRequest?
- internal var archiveControlsRequest            :   AbstractRequest?
- internal var livePhotoShotRequest              :   AbstractRequest?
- internal var securityMarkerRequest             :   AbstractRequest?
- internal var descriptionInfoRequest            :   AbstractRequest?
+ internal var showsInternalControls = false {
+  didSet { controlGroups.forEach { $0.isHidden = !showsInternalControls } }
+ }
+ 
+ internal var showsInternalAlerts = false {
+  didSet { playerAlertView.isHidden = !showsInternalAlerts }
+ }
+ 
+ internal var archivePhotoShotsPrefetchRequests = [ URLSessionRequestRepresentable ]()
+ internal var viewModeLivePhotoShotsRequests    = [ URLSessionRequestRepresentable ]()
+ internal var viewModeArchivePhotoShotsRequests = [ URLSessionRequestRepresentable ]()
+ 
+ internal var deviceConnectionRequest           :   URLSessionRequestRepresentable?
+ internal var archiveControlsRequest            :   URLSessionRequestRepresentable?
+ internal var livePhotoShotRequest              :   URLSessionRequestRepresentable?
+ internal var securityMarkerRequest             :   URLSessionRequestRepresentable?
+ internal var descriptionInfoRequest            :   URLSessionRequestRepresentable?
 
  internal lazy var  playerArchiveImagesCache = { () -> ArchiveImagesCache in
   let cache = ArchiveImagesCache()
   cache.delegate = self
   cache.interval = archiveTimeStepSeconds
-  cache.prefetchSize = 200
+  cache.prefetchSize = 50
   cache.defaultImageQuality = .low
   return cache
  }()
@@ -122,18 +130,16 @@ where Delegate.Device == Manager.InputDevice {
  
  private let stateIQ = DispatchQueue(label: "NTXMobileNativePlayer.State.Isolation.Queue")
  
- internal var notificationsTokens = [ Any ]() {
-  didSet { debugPrint ("PLAYER - notificationsTokens", notificationsTokens) }
- }
+ internal var notificationsTokens = [ Any ]()
  
  internal var playerState: any NTXPlayerState {
   get { stateIQ.sync  { __state__ } }
   set { stateIQ.sync  { __state__ = newValue  }}
  }
  
- private var __currentState__: VideoPlayerState = .loading
+ private var __currentState__: VideoPlayerStateEnum = .loading
  
- internal var currentState: VideoPlayerState {
+ internal var currentState: VideoPlayerStateEnum {
   get { stateIQ.sync  { __currentState__ } }
   set { stateIQ.sync  { __currentState__ = newValue  }}
  }
@@ -152,7 +158,7 @@ where Delegate.Device == Manager.InputDevice {
     } catch let error as NTXPlayerStates.StateError {
      self.playerState = NTXPlayerStates.Failed(player: self, error: .stateError(error: error))
     } catch {
-     print ("Catch all")
+     debugPrint ("<<< **** UNKNOWN INTERNAL PLAYER ERROR! CATCH ALL!! **** >>>\n\(error)")
     }
    }
   }
@@ -188,6 +194,8 @@ where Delegate.Device == Manager.InputDevice {
  internal var currentTime: CMTime? { playerContext.player.currentItem?.currentTime() }
  
  internal unowned let playerContainerView: UIView
+ 
+ private weak var playerRootView: UIView? // a weak ref companion of unowned let playerContainerView!
  
  internal unowned var playerOwnerView: UIView
  
@@ -244,9 +252,11 @@ where Delegate.Device == Manager.InputDevice {
   self.shutdownHandler = shutdownHandler
   
   super.init()
-  debugPrint ("@@@@@@@@@@@@@@@@@@@@@+++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-  debugPrint ("<<<< ***** Player Initialized ***** >>>>", #function)
-  debugPrint ("@@@@@@@@@@@@@@@@@@@@@+++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+  
+  self.playerRootView = playerContainerView
+  
+  debugPrint ("<<<< ***** PLAYER INITIALIZED ***** >>>>", #function)
+ 
  }
  
  private let alertDispatcher = DispatchQueue(label: "Player.alertDispatcher")
@@ -275,7 +285,8 @@ where Delegate.Device == Manager.InputDevice {
   
   debugPrint (#function)
   
-
+  guard showsInternalAlerts else { return }
+  
   alertDispatcher.async { [ weak alertView = playerAlertView,
                             weak containerView = playerContainerView,
                             sema = alertSemaphore,
@@ -306,7 +317,7 @@ where Delegate.Device == Manager.InputDevice {
  deinit {
   debugPrint( " <<<<<<< **** PLAYER CLASS IS DESTROYED **** >>>>>>")
   
-  playerContainerView.removeFromSuperview()
+  playerRootView?.removeFromSuperview()
   
   if #available(iOS 13.0, *) {
    notificationsTokens.compactMap{ $0 as? AnyCancellable }.forEach{ $0.cancel() }

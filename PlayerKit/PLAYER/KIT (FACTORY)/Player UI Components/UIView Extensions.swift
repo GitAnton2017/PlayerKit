@@ -10,6 +10,24 @@ import UIKit
 
 extension UIView {
  
+ @discardableResult func confined(centeredYIn container: UIView,
+                                  applying insets: UIEdgeInsets = .zero,
+                                  withRelativeSize fraction: CGFloat )  -> Self {
+  
+  translatesAutoresizingMaskIntoConstraints = false
+  
+  container.addSubview(self)
+  
+  let cy1 = container.centerYAnchor.constraint(equalTo: centerYAnchor)
+  let tt = container.trailingAnchor.constraint(equalTo: trailingAnchor, constant: insets.right)
+  let ll = container.leadingAnchor.constraint(equalTo: leadingAnchor, constant:  -insets.left )
+  let ah = heightAnchor.constraint(lessThanOrEqualTo: container.heightAnchor, multiplier: fraction)
+  
+  NSLayoutConstraint.activate([cy1, tt, ll, ah])
+  
+  return self
+ }
+ 
  @discardableResult func confined(centeredIn container: UIView) -> Self {
   
   translatesAutoresizingMaskIntoConstraints = false
@@ -24,7 +42,7 @@ extension UIView {
  
  
  @discardableResult func confined(to container: UIView,
-               applying insets: UIEdgeInsets = .zero ) -> Self {
+                                  applying insets: UIEdgeInsets = .zero ) -> Self {
   
   translatesAutoresizingMaskIntoConstraints = false
   
@@ -39,8 +57,8 @@ extension UIView {
  }
  
  @discardableResult func confined(centeredIn container: UIView,
-               withAdaptiveRelativeSize fraction: CGFloat,
-               changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
+                                  withAdaptiveRelativeSize fraction: CGFloat,
+                                  changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
   
   translatesAutoresizingMaskIntoConstraints = false
   
@@ -78,6 +96,85 @@ extension UIView {
   return self
  }
  
+ @discardableResult func confined(toCenterLeftOf container: UIView,
+                                  with relativeSize: CGFloat,
+                                  shift: CGPoint = .zero,
+                                  changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
+  
+  translatesAutoresizingMaskIntoConstraints = false
+  
+  container.addSubview(self)
+  
+  let ld = container.leadingAnchor.constraint(equalTo:  leadingAnchor, constant: shift.x)
+  let cy = container.centerYAnchor.constraint(equalTo:  centerYAnchor, constant: shift.y)
+  let rw = widthAnchor.constraint(equalTo: container.widthAnchor,  multiplier: relativeSize)
+  let ch = heightAnchor.constraint(equalTo: container.heightAnchor,  multiplier: relativeSize)
+  let ar = heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1)
+  
+  let regular = [ld, cy, rw, ar]
+  let compact = [ld, cy, ch, ar]
+  
+  let all = regular + compact
+  
+  NSLayoutConstraint.activate(regular)
+  
+  let token = container.observe(\.bounds, options: [.new]) { _ , change  in
+   
+   NSLayoutConstraint.deactivate(all)
+   
+   guard let frame = change.newValue else { return }
+   
+   if frame.width < frame.height {
+    NSLayoutConstraint.activate(regular)
+   } else {
+    NSLayoutConstraint.activate(compact)
+   }
+  }
+  
+  changeFrameTokens.insert(token)
+  
+  return self
+ }
+ 
+ @discardableResult func confined(toCenterRightOf container: UIView,
+                                  with relativeSize: CGFloat,
+                                  shift: CGPoint = .zero,
+                                  changeFrameTokens: inout Set<NSKeyValueObservation>) -> Self {
+  
+  translatesAutoresizingMaskIntoConstraints = false
+  
+  container.addSubview(self)
+  
+  let tr = container.trailingAnchor.constraint(equalTo:  trailingAnchor, constant: shift.x)
+  let cy = container.centerYAnchor.constraint(equalTo:  centerYAnchor, constant: shift.y)
+  let rw = widthAnchor.constraint(equalTo: container.widthAnchor,  multiplier: relativeSize)
+  let ch = heightAnchor.constraint(equalTo: container.heightAnchor,  multiplier: relativeSize)
+  let ar = heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1)
+  
+  let regular = [tr, cy, rw, ar]
+  let compact = [tr, cy, ch, ar]
+  
+  let all = regular + compact
+  
+  NSLayoutConstraint.activate(regular)
+  
+  let token = container.observe(\.bounds, options: [.new]) { _ , change  in
+   
+   NSLayoutConstraint.deactivate(all)
+   
+   guard let frame = change.newValue else { return }
+   
+   if frame.width < frame.height {
+    NSLayoutConstraint.activate(regular)
+   } else {
+    NSLayoutConstraint.activate(compact)
+   }
+  }
+  
+  changeFrameTokens.insert(token)
+  
+  return self
+ }
 
  @discardableResult func confined(toTopRightOf container: UIView,
                with relativeSize: CGFloat,

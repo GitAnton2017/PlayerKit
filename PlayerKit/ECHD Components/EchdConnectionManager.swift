@@ -532,7 +532,7 @@ internal final class EchdConnectionManager: NSObject, EchdServerTimeServiceDeleg
 
     }
     
-    internal func requestCameraAudible(camera: EchdCamera, callback: @escaping (_ hasSound: Bool) -> Void) {
+    internal func requestCameraAudible(camera: ECHDCamera, callback: @escaping (_ hasSound: Bool) -> Void) {
         let shotUrls = camera.getArchiveShotControl()
         
         guard let shotUrlPath = shotUrls?.first, let shotUrl = URL(string: shotUrlPath) else { return }

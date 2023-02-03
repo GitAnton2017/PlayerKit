@@ -16,5 +16,3 @@ internal protocol NTXVSSArchiveControlContext where Self: NSObject{
 }
 
 
-//IMPL:
-extension EchdArchiveControl: NTXVSSArchiveControlContext {}

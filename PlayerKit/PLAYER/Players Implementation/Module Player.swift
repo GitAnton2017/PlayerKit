@@ -19,16 +19,20 @@ internal protocol PlayerAdapter: AnyObject {
  
  func start() throws
  
- var  playerState: VideoPlayerState { get }
+ var  playerState: VideoPlayerStateEnum { get }
  
  func play()                         -> Bool
  func play(at: UInt)                 -> Bool
  func pause()                        -> Bool
  func stop()                         -> Bool
- func toggleMuted()                  -> Bool
+ func toggleMuted(isMuted: Bool)     -> Bool
  
  func toggleViewMode( isVideo: Bool) -> Bool //view mode single shot
  func toggleViewMode()               -> Bool //toggle view mode polling
+ 
+ 
+ var showsInternalControls : Bool { get set }
+ var showsInternalAlerts   : Bool { get set }
  
  func purgeArchiveCache()
  
@@ -43,6 +47,17 @@ internal protocol PlayerAdapter: AnyObject {
 
 internal final class NTXPlayerAdapter<Delegate: NTXVideoPlayerDelegate>: PlayerAdapter
 where Delegate.Device == Int {
+ 
+ var showsInternalControls: Bool {
+  get { player.showsInternalControls }
+  set { player.showsInternalControls = newValue }
+ }
+ 
+ var showsInternalAlerts: Bool {
+  get { player.showsInternalAlerts }
+  set { player.showsInternalAlerts = newValue }
+ }
+ 
  
  var vssDescription: CameraDescription? {
   guard let description = player.currentVSSDescription else  { return nil }
@@ -61,16 +76,16 @@ where Delegate.Device == Int {
  
  internal func pause() -> Bool { player.pause() }
  
- internal func stop() -> Bool  { player.stop(); return player.refresh() }
+ internal func stop() -> Bool  { player.stop() }
  
  internal func play() -> Bool { player.play() }
  
- internal func toggleMuted() -> Bool { player.toggleMuting() }
+ internal func toggleMuted(isMuted: Bool) -> Bool { player.setPlayerMutedState(isMuted: isMuted) }
  
  private var isVideoMode: Bool = true
  
  internal func toggleViewMode(isVideo: Bool) -> Bool {
-  player.setViewMode(isActive: isVideo)
+  player.setViewMode(isActive: !isVideo)
  }
  
  internal func toggleViewMode() -> Bool {
@@ -82,7 +97,7 @@ where Delegate.Device == Int {
  }
 
  
- internal var playerState: VideoPlayerState { player.currentState }
+ internal var playerState: VideoPlayerStateEnum { player.currentState }
  
  internal let credentials: NTXCredentials
  
@@ -106,13 +121,13 @@ where Delegate.Device == Int {
                          inputVSS: device,
                          connectionManager: manager)
   
-  con.securityMarker = self.securityMarker
+  //con.securityMarker = self.securityMarker
   
   return con
   
  }()
  
- internal var securityMarker: String?
+ //internal var securityMarker: String?
  
  internal init(device: Delegate.Device,
              credentials: NTXCredentials,

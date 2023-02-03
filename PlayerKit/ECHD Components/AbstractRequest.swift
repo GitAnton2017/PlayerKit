@@ -8,10 +8,15 @@
 
 import Alamofire
 import UIKit
+import Combine
+
 
 internal protocol AbstractRequest: AnyObject {
     
+ 
     var dataRequest: DataRequest? { get set }
+ 
+ 
     
     func request(parameters:[String: Any],
                  fail: @escaping (Error) -> Void,
@@ -93,4 +98,13 @@ internal extension AbstractRequest {
        
         return "Videogorod/\(version) ios/\(UIDevice.current.model) iOS/\(UIDevice.current.systemVersion) CFNetwork/0 Darwin/\(build)"
     }
+}
+
+extension AbstractRequest {
+ 
+}
+
+@available(iOS 13.0, *)
+extension AbstractRequest {
+ 
 }
